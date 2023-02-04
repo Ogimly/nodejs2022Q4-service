@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AlbumsService } from '../albums/albums.service';
-import { ArtistsRepository } from '../DB/artisrs-db';
+import { ArtistsRepository } from '../common/DB/artisrs-db';
 import { TracksService } from '../tracks/tracks.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';

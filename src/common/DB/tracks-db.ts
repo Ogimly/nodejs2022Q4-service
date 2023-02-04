@@ -1,10 +1,10 @@
 import * as uuid from 'uuid';
 import { HttpStatus } from '@nestjs/common';
-import { DBErrors } from '../common/enums';
-import { RequestResult } from '../common/interfaces';
-import { TrackEntity } from '../tracks/entities/track.entity';
-import { CreateTrackDto } from '../tracks/dto/create-track.dto';
-import { UpdateTrackDto } from '../tracks/dto/update-track.dto';
+import { DBErrors } from '../enums';
+import { RequestResult } from '../interfaces';
+import { TrackEntity } from '../../tracks/entities/track.entity';
+import { CreateTrackDto } from '../../tracks/dto/create-track.dto';
+import { UpdateTrackDto } from '../../tracks/dto/update-track.dto';
 
 export class TracksRepository {
   private tracks: TrackEntity[] = [];

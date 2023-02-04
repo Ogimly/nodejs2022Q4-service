@@ -1,10 +1,10 @@
 import * as uuid from 'uuid';
 import { HttpStatus } from '@nestjs/common';
-import { DBErrors } from '../common/enums';
-import { RequestResult } from '../common/interfaces';
-import { AlbumEntity } from '../albums/entities/album.entity';
-import { CreateAlbumDto } from '../albums/dto/create-album.dto';
-import { UpdateAlbumDto } from '../albums/dto/update-album.dto';
+import { DBErrors } from '../enums';
+import { RequestResult } from '../interfaces';
+import { AlbumEntity } from '../../albums/entities/album.entity';
+import { CreateAlbumDto } from '../../albums/dto/create-album.dto';
+import { UpdateAlbumDto } from '../../albums/dto/update-album.dto';
 
 export class AlbumsRepository {
   private albums: AlbumEntity[] = [];

@@ -1,10 +1,10 @@
 import * as uuid from 'uuid';
 import { HttpStatus } from '@nestjs/common';
-import { DBErrors } from '../common/enums';
-import { RequestResult } from '../common/interfaces';
-import { CreateUserDto } from '../users/dto/create-user.dto';
-import { UserEntity } from '../users/entities/user.entity';
-import { UpdateUserDto } from '../users/dto/update-user.dto';
+import { DBErrors } from '../enums';
+import { RequestResult } from '../interfaces';
+import { CreateUserDto } from '../../users/dto/create-user.dto';
+import { UserEntity } from '../../users/entities/user.entity';
+import { UpdateUserDto } from '../../users/dto/update-user.dto';
 
 export class UsersRepository {
   private users: UserEntity[] = [];

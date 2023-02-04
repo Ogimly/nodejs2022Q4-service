@@ -1,10 +1,10 @@
 import * as uuid from 'uuid';
 import { HttpStatus } from '@nestjs/common';
-import { DBErrors } from '../common/enums';
-import { RequestResult } from '../common/interfaces';
-import { ArtistEntity } from '../artists/entities/artist.entity';
-import { CreateArtistDto } from '../artists/dto/create-artist.dto';
-import { UpdateArtistDto } from '../artists/dto/update-artist.dto';
+import { DBErrors } from '../enums';
+import { RequestResult } from '../interfaces';
+import { ArtistEntity } from '../../artists/entities/artist.entity';
+import { CreateArtistDto } from '../../artists/dto/create-artist.dto';
+import { UpdateArtistDto } from '../../artists/dto/update-artist.dto';
 
 export class ArtistsRepository {
   private artists: ArtistEntity[] = [];
