@@ -2,6 +2,8 @@ export const enum DBErrors {
   UserNotFound = 'User not found',
   UserPasswordInvalid = 'Invalid user password',
 
+  ArtistNotFound = 'Artist not found',
+
   //     InternalServerError = 'Internal Server Error',
   //   RouteNotFound = 'Route not found',
   //   UnknownMethod = 'Unknown method',

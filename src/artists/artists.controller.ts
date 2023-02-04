@@ -1,34 +1,82 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+  UsePipes,
+  ValidationPipe,
+  ParseUUIDPipe,
+  HttpCode,
+  HttpException,
+} from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 
-@Controller('artists')
+@UsePipes(new ValidationPipe())
+@Controller('artist')
 export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
 
   @Post()
-  create(@Body() createArtistDto: CreateArtistDto) {
-    return this.artistsService.create(createArtistDto);
+  async create(@Body() createArtistDto: CreateArtistDto) {
+    const res = await this.artistsService.create(createArtistDto);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
   @Get()
-  findAll() {
-    return this.artistsService.findAll();
+  async findAll() {
+    const res = await this.artistsService.findAll();
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.artistsService.findOne(+id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const res = await this.artistsService.findOne(id);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateArtistDto: UpdateArtistDto) {
-    return this.artistsService.update(+id, updateArtistDto);
+  @Put(':id')
+  async update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateArtistDto: UpdateArtistDto
+  ) {
+    const res = await this.artistsService.update(id, updateArtistDto);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.artistsService.remove(+id);
+  @HttpCode(204)
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const res = await this.artistsService.remove(id);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 }
