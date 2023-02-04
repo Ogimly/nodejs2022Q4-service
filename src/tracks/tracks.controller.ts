@@ -1,34 +1,82 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+  UsePipes,
+  ValidationPipe,
+  ParseUUIDPipe,
+  HttpCode,
+  HttpException,
+} from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 
-@Controller('tracks')
+@UsePipes(new ValidationPipe())
+@Controller('track')
 export class TracksController {
   constructor(private readonly tracksService: TracksService) {}
 
   @Post()
-  create(@Body() createTrackDto: CreateTrackDto) {
-    return this.tracksService.create(createTrackDto);
+  async create(@Body() createTrackDto: CreateTrackDto) {
+    const res = await this.tracksService.create(createTrackDto);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
   @Get()
-  findAll() {
-    return this.tracksService.findAll();
+  async findAll() {
+    const res = await this.tracksService.findAll();
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tracksService.findOne(+id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const res = await this.tracksService.findOne(id);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTrackDto: UpdateTrackDto) {
-    return this.tracksService.update(+id, updateTrackDto);
+  @Put(':id')
+  async update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateTrackDto: UpdateTrackDto
+  ) {
+    const res = await this.tracksService.update(id, updateTrackDto);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tracksService.remove(+id);
+  @HttpCode(204)
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const res = await this.tracksService.remove(id);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 }

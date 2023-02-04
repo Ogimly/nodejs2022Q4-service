@@ -23,8 +23,8 @@ export class ArtistsService {
     return this.artists.findOne(id);
   }
 
-  update(id: string, updateUserDto: UpdateArtistDto) {
-    return this.artists.update(id, updateUserDto);
+  update(id: string, updateArtistDto: UpdateArtistDto) {
+    return this.artists.update(id, updateArtistDto);
   }
 
   remove(id: string) {
