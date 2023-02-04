@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   UsePipes,
   ValidationPipe,
+  HttpException,
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 
@@ -16,13 +17,52 @@ export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @Get()
-  findAll() {
-    return this.favoritesService.findAll();
+  async findAll() {
+    const res = await this.favoritesService.findAll();
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
+  }
+
+  @Post('artist/:id')
+  async addArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    const res = await this.favoritesService.addArtist(id);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
   @Post('track/:id')
-  addTrack(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.favoritesService.addTrack(id);
+  async addTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+    const res = await this.favoritesService.addTrack(id);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
+  }
+
+  @Post('album/:id')
+  async addAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+    const res = await this.favoritesService.addAlbum(id);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
+  }
+
+  @Delete('artist/:id')
+  removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.favoritesService.removeArtist(id);
   }
 
   @Delete('track/:id')
@@ -30,23 +70,8 @@ export class FavoritesController {
     return this.favoritesService.removeTrack(id);
   }
 
-  @Post('album/:id')
-  addAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.favoritesService.addAlbum(id);
-  }
-
   @Delete('album/:id')
   removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.favoritesService.removeAlbum(id);
-  }
-
-  @Post('artist/:id')
-  addArtist(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.favoritesService.addArtist(id);
-  }
-
-  @Delete('artist/:id')
-  removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.favoritesService.removeArtist(id);
   }
 }

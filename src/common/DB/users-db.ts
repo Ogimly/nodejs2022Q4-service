@@ -1,6 +1,6 @@
 import * as uuid from 'uuid';
 import { HttpStatus } from '@nestjs/common';
-import { DBErrors } from '../enums';
+import { DBMessages } from '../enums';
 import { RequestResult } from '../interfaces';
 import { CreateUserDto } from '../../users/dto/create-user.dto';
 import { UserEntity } from '../../users/entities/user.entity';
@@ -41,7 +41,7 @@ export class UsersRepository {
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.UserNotFound,
+        error: DBMessages.UserNotFound,
       };
     }
 
@@ -61,14 +61,14 @@ export class UsersRepository {
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.UserNotFound,
+        error: DBMessages.UserNotFound,
       };
 
     if (foundUser.password !== updateUserDto.oldPassword)
       return {
         data: null,
         status: HttpStatus.FORBIDDEN,
-        error: DBErrors.UserPasswordInvalid,
+        error: DBMessages.UserPasswordInvalid,
       };
 
     foundUser.version++;
@@ -88,7 +88,7 @@ export class UsersRepository {
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.UserNotFound,
+        error: DBMessages.UserNotFound,
       };
     }
 

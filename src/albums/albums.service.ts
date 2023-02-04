@@ -16,8 +16,8 @@ export class AlbumsService {
     return this.albums.create(createAlbumDto);
   }
 
-  findAll() {
-    return this.albums.findAll();
+  findAll(ids: string[] = []) {
+    return this.albums.findAll(ids);
   }
 
   findOne(id: string) {

@@ -1,12 +1,18 @@
-export const enum DBErrors {
+export const enum DBMessages {
   UserNotFound = 'User not found',
   UserPasswordInvalid = 'Invalid user password',
 
   ArtistNotFound = 'Artist not found',
+  ArtistAdded = 'Artist added successfully',
+  ArtistRemoved = 'Artist removed successfully',
 
   TrackNotFound = 'Track not found',
+  TrackAdded = 'Track added successfully',
+  TrackRemoved = 'Track removed successfully',
 
   AlbumNotFound = 'Album not found',
+  AlbumAdded = 'Album added successfully',
+  AlbumRemoved = 'Album removed successfully',
 
   //     InternalServerError = 'Internal Server Error',
   //   RouteNotFound = 'Route not found',

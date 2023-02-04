@@ -15,8 +15,8 @@ export class TracksService {
     return this.tracks.create(createTrackDto);
   }
 
-  findAll() {
-    return this.tracks.findAll();
+  findAll(ids: string[] = []) {
+    return this.tracks.findAll(ids);
   }
 
   findOne(id: string) {

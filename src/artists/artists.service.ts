@@ -20,8 +20,8 @@ export class ArtistsService {
     return this.artists.create(createArtistDto);
   }
 
-  findAll() {
-    return this.artists.findAll();
+  findAll(ids: string[] = []) {
+    return this.artists.findAll(ids);
   }
 
   findOne(id: string) {

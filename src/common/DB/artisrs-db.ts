@@ -1,6 +1,6 @@
 import * as uuid from 'uuid';
 import { HttpStatus } from '@nestjs/common';
-import { DBErrors } from '../enums';
+import { DBMessages } from '../enums';
 import { RequestResult } from '../interfaces';
 import { ArtistEntity } from '../../artists/entities/artist.entity';
 import { CreateArtistDto } from '../../artists/dto/create-artist.dto';
@@ -24,9 +24,12 @@ export class ArtistsRepository {
     };
   }
 
-  public async findAll(): Promise<RequestResult<ArtistEntity[]>> {
+  public async findAll(ids: string[] = []): Promise<RequestResult<ArtistEntity[]>> {
     return {
-      data: this.artists,
+      data:
+        ids.length === 0
+          ? this.artists
+          : this.artists.filter(({ id }) => ids.includes(id)),
       status: HttpStatus.OK,
     };
   }
@@ -38,7 +41,7 @@ export class ArtistsRepository {
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.ArtistNotFound,
+        error: DBMessages.ArtistNotFound,
       };
     }
 
@@ -58,7 +61,7 @@ export class ArtistsRepository {
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.ArtistNotFound,
+        error: DBMessages.ArtistNotFound,
       };
 
     Object.assign(foundArtist, updateArtistDto);
@@ -76,7 +79,7 @@ export class ArtistsRepository {
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.ArtistNotFound,
+        error: DBMessages.ArtistNotFound,
       };
     }
 

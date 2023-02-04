@@ -1,6 +1,6 @@
 import * as uuid from 'uuid';
 import { HttpStatus } from '@nestjs/common';
-import { DBErrors } from '../enums';
+import { DBMessages } from '../enums';
 import { RequestResult } from '../interfaces';
 import { AlbumEntity } from '../../albums/entities/album.entity';
 import { CreateAlbumDto } from '../../albums/dto/create-album.dto';
@@ -27,9 +27,10 @@ export class AlbumsRepository {
     };
   }
 
-  public async findAll(): Promise<RequestResult<AlbumEntity[]>> {
+  public async findAll(ids: string[] = []): Promise<RequestResult<AlbumEntity[]>> {
     return {
-      data: this.albums,
+      data:
+        ids.length === 0 ? this.albums : this.albums.filter(({ id }) => ids.includes(id)),
       status: HttpStatus.OK,
     };
   }
@@ -41,7 +42,7 @@ export class AlbumsRepository {
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.AlbumNotFound,
+        error: DBMessages.AlbumNotFound,
       };
     }
 
@@ -61,7 +62,7 @@ export class AlbumsRepository {
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.AlbumNotFound,
+        error: DBMessages.AlbumNotFound,
       };
 
     Object.assign(foundAlbum, updateAlbumDto);
@@ -79,7 +80,7 @@ export class AlbumsRepository {
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.AlbumNotFound,
+        error: DBMessages.AlbumNotFound,
       };
     }
 

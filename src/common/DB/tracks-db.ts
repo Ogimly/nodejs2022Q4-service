@@ -1,6 +1,6 @@
 import * as uuid from 'uuid';
 import { HttpStatus } from '@nestjs/common';
-import { DBErrors } from '../enums';
+import { DBMessages } from '../enums';
 import { RequestResult } from '../interfaces';
 import { TrackEntity } from '../../tracks/entities/track.entity';
 import { CreateTrackDto } from '../../tracks/dto/create-track.dto';
@@ -28,9 +28,10 @@ export class TracksRepository {
     };
   }
 
-  public async findAll(): Promise<RequestResult<TrackEntity[]>> {
+  public async findAll(ids: string[] = []): Promise<RequestResult<TrackEntity[]>> {
     return {
-      data: this.tracks,
+      data:
+        ids.length === 0 ? this.tracks : this.tracks.filter(({ id }) => ids.includes(id)),
       status: HttpStatus.OK,
     };
   }
@@ -42,7 +43,7 @@ export class TracksRepository {
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.TrackNotFound,
+        error: DBMessages.TrackNotFound,
       };
     }
 
@@ -62,7 +63,7 @@ export class TracksRepository {
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.TrackNotFound,
+        error: DBMessages.TrackNotFound,
       };
 
     Object.assign(foundTrack, updateTrackDto);
@@ -80,7 +81,7 @@ export class TracksRepository {
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.TrackNotFound,
+        error: DBMessages.TrackNotFound,
       };
     }
 
