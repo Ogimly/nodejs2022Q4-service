@@ -55,22 +55,57 @@ export class FavoritesRepository {
     };
   }
 
-  // public async remove(albumId: string): Promise<RequestResult<AlbumEntity>> {
-  //   const index = this.albums.findIndex(({ id }) => id === albumId);
+  public async removeArtist(artistId: string): Promise<RequestResult<string>> {
+    const idx = this.artists.findIndex((id) => id === artistId);
 
-  //   if (index === -1) {
-  //     return {
-  //       data: null,
-  //       status: HttpStatus.NOT_FOUND,
-  //       error: DBMessages.AlbumNotFound,
-  //     };
-  //   }
+    if (idx === -1)
+      return {
+        data: null,
+        status: HttpStatus.NOT_FOUND,
+        error: DBMessages.ArtistNotInFavorites,
+      };
 
-  //   this.albums.splice(index, 1);
+    this.artists.splice(idx, 1);
 
-  //   return {
-  //     data: null,
-  //     status: HttpStatus.NO_CONTENT,
-  //   };
-  //}
+    return {
+      data: DBMessages.ArtistRemoved,
+      status: HttpStatus.NO_CONTENT,
+    };
+  }
+
+  public async removeTrack(trackId: string): Promise<RequestResult<string>> {
+    const idx = this.tracks.findIndex((id) => id === trackId);
+
+    if (idx === -1)
+      return {
+        data: null,
+        status: HttpStatus.NOT_FOUND,
+        error: DBMessages.TrackNotInFavorites,
+      };
+
+    this.tracks.splice(idx, 1);
+
+    return {
+      data: DBMessages.TrackRemoved,
+      status: HttpStatus.NO_CONTENT,
+    };
+  }
+
+  public async removeAlbum(albumId: string): Promise<RequestResult<string>> {
+    const idx = this.albums.findIndex((id) => id === albumId);
+
+    if (idx === -1)
+      return {
+        data: null,
+        status: HttpStatus.NOT_FOUND,
+        error: DBMessages.AlbumNotInFavorites,
+      };
+
+    this.albums.splice(idx, 1);
+
+    return {
+      data: DBMessages.AlbumRemoved,
+      status: HttpStatus.NO_CONTENT,
+    };
+  }
 }

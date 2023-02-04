@@ -65,15 +65,27 @@ export class FavoritesService {
     return this.favorites.addAlbum(albumId);
   }
 
-  removeArtist(ArtistId: string) {
-    return `This action removes a #${ArtistId} favorite`;
+  async removeArtist(ArtistId: string) {
+    const res = await this.artistsService.findOne(ArtistId);
+
+    if (res.error) return res;
+
+    return this.favorites.removeArtist(ArtistId);
   }
 
-  removeTrack(trackId: string) {
-    return `This action removes a #${trackId} favorite`;
+  async removeTrack(trackId: string) {
+    const res = await this.tracksService.findOne(trackId);
+
+    if (res.error) return res;
+
+    return this.favorites.removeTrack(trackId);
   }
 
-  removeAlbum(albumId: string) {
-    return `This action removes a #${albumId} favorite`;
+  async removeAlbum(albumId: string) {
+    const res = await this.albumsService.findOne(albumId);
+
+    if (res.error) return res;
+
+    return this.favorites.removeAlbum(albumId);
   }
 }

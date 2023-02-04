@@ -8,6 +8,7 @@ import {
   UsePipes,
   ValidationPipe,
   HttpException,
+  HttpCode,
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 
@@ -61,17 +62,38 @@ export class FavoritesController {
   }
 
   @Delete('artist/:id')
-  removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.favoritesService.removeArtist(id);
+  @HttpCode(204)
+  async removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    const res = await this.favoritesService.removeArtist(id);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
   @Delete('track/:id')
-  removeTrack(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.favoritesService.removeTrack(id);
+  @HttpCode(204)
+  async removeTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+    const res = await this.favoritesService.removeTrack(id);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
   @Delete('album/:id')
-  removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.favoritesService.removeAlbum(id);
+  @HttpCode(204)
+  async removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+    const res = await this.favoritesService.removeAlbum(id);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 }
