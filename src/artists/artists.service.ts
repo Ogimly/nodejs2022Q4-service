@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ArtistsRepository } from '../DB/artisrs-db';
+import { TracksService } from '../tracks/tracks.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 
@@ -7,7 +8,7 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 export class ArtistsService {
   private artists: ArtistsRepository;
 
-  constructor() {
+  constructor(private tracksService: TracksService) {
     this.artists = new ArtistsRepository();
   }
 
@@ -27,7 +28,9 @@ export class ArtistsService {
     return this.artists.update(id, updateArtistDto);
   }
 
-  remove(id: string) {
+  async remove(id: string) {
+    await this.tracksService.removeArtistId(id);
+
     return this.artists.remove(id);
   }
 }

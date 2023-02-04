@@ -4,6 +4,8 @@ export const enum DBErrors {
 
   ArtistNotFound = 'Artist not found',
 
+  TrackNotFound = 'Track not found',
+
   //     InternalServerError = 'Internal Server Error',
   //   RouteNotFound = 'Route not found',
   //   UnknownMethod = 'Unknown method',

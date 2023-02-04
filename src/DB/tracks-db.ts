@@ -7,7 +7,7 @@ import { CreateTrackDto } from '../tracks/dto/create-track.dto';
 import { UpdateTrackDto } from '../tracks/dto/update-track.dto';
 
 export class TracksRepository {
-  private artists: TrackEntity[] = [];
+  private tracks: TrackEntity[] = [];
 
   public async create(
     createTrackDto: CreateTrackDto
@@ -20,7 +20,7 @@ export class TracksRepository {
     if (!newTrack.albumId) newTrack.albumId = null;
     if (!newTrack.artistId) newTrack.artistId = null;
 
-    this.artists.push(newTrack);
+    this.tracks.push(newTrack);
 
     return {
       data: newTrack,
@@ -30,65 +30,71 @@ export class TracksRepository {
 
   public async findAll(): Promise<RequestResult<TrackEntity[]>> {
     return {
-      data: this.artists,
+      data: this.tracks,
       status: HttpStatus.OK,
     };
   }
 
-  public async findOne(artistId: string): Promise<RequestResult<TrackEntity>> {
-    const foundArtist = this.artists.find(({ id }) => id === artistId);
+  public async findOne(trackId: string): Promise<RequestResult<TrackEntity>> {
+    const foundTrack = this.tracks.find(({ id }) => id === trackId);
 
-    if (!foundArtist) {
+    if (!foundTrack) {
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.ArtistNotFound,
+        error: DBErrors.TrackNotFound,
       };
     }
 
     return {
-      data: foundArtist,
+      data: foundTrack,
       status: HttpStatus.OK,
     };
   }
 
   public async update(
-    artistId: string,
+    trackId: string,
     updateTrackDto: UpdateTrackDto
   ): Promise<RequestResult<TrackEntity>> {
-    const foundArtist = this.artists.find(({ id }) => id === artistId);
+    const foundTrack = this.tracks.find(({ id }) => id === trackId);
 
-    if (!foundArtist)
+    if (!foundTrack)
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.ArtistNotFound,
+        error: DBErrors.TrackNotFound,
       };
 
-    Object.assign(foundArtist, updateTrackDto);
+    Object.assign(foundTrack, updateTrackDto);
 
     return {
-      data: foundArtist,
+      data: foundTrack,
       status: HttpStatus.OK,
     };
   }
 
-  public async remove(artistId: string): Promise<RequestResult<TrackEntity>> {
-    const index = this.artists.findIndex(({ id }) => id === artistId);
+  public async remove(trackId: string): Promise<RequestResult<TrackEntity>> {
+    const index = this.tracks.findIndex(({ id }) => id === trackId);
 
     if (index === -1) {
       return {
         data: null,
         status: HttpStatus.NOT_FOUND,
-        error: DBErrors.ArtistNotFound,
+        error: DBErrors.TrackNotFound,
       };
     }
 
-    this.artists.splice(index, 1);
+    this.tracks.splice(index, 1);
 
     return {
       data: null,
       status: HttpStatus.NO_CONTENT,
     };
+  }
+
+  public async removeArtistId(idToRemoved: string): Promise<void> {
+    const foundTracks = this.tracks.filter(({ artistId }) => artistId === idToRemoved);
+
+    foundTracks.forEach((track) => (track.artistId = null));
   }
 }

@@ -30,4 +30,8 @@ export class TracksService {
   remove(id: string) {
     return this.tracks.remove(id);
   }
+
+  removeArtistId(artistId: string) {
+    return this.tracks.removeArtistId(artistId);
+  }
 }
