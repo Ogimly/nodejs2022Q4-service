@@ -10,9 +10,11 @@ import {
   HttpException,
   HttpCode,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { FavoritesService } from './favorites.service';
 
 @UsePipes(new ValidationPipe())
+@ApiTags('Favorites')
 @Controller('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
