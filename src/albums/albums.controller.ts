@@ -1,34 +1,82 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+  UsePipes,
+  ValidationPipe,
+  ParseUUIDPipe,
+  HttpException,
+  HttpCode,
+} from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 
-@Controller('albums')
+@UsePipes(new ValidationPipe())
+@Controller('album')
 export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}
 
   @Post()
-  create(@Body() createAlbumDto: CreateAlbumDto) {
-    return this.albumsService.create(createAlbumDto);
+  async create(@Body() createAlbumDto: CreateAlbumDto) {
+    const res = await this.albumsService.create(createAlbumDto);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
   @Get()
-  findAll() {
-    return this.albumsService.findAll();
+  async findAll() {
+    const res = await this.albumsService.findAll();
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.albumsService.findOne(+id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const res = await this.albumsService.findOne(id);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAlbumDto: UpdateAlbumDto) {
-    return this.albumsService.update(+id, updateAlbumDto);
+  @Put(':id')
+  async update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateAlbumDto: UpdateAlbumDto
+  ) {
+    const res = await this.albumsService.update(id, updateAlbumDto);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.albumsService.remove(+id);
+  @HttpCode(204)
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const res = await this.albumsService.remove(id);
+
+    if (res.error) {
+      throw new HttpException(res.error, res.status);
+    }
+
+    return res.data;
   }
 }

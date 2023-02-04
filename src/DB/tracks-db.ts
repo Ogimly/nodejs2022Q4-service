@@ -97,4 +97,10 @@ export class TracksRepository {
 
     foundTracks.forEach((track) => (track.artistId = null));
   }
+
+  public async removeAlbumId(idToRemoved: string): Promise<void> {
+    const foundTracks = this.tracks.filter(({ albumId }) => albumId === idToRemoved);
+
+    foundTracks.forEach((track) => (track.albumId = null));
+  }
 }

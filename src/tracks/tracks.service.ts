@@ -34,4 +34,8 @@ export class TracksService {
   removeArtistId(artistId: string) {
     return this.tracks.removeArtistId(artistId);
   }
+
+  removeAlbumId(albumId: string) {
+    return this.tracks.removeAlbumId(albumId);
+  }
 }

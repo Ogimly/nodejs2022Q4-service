@@ -1,26 +1,40 @@
 import { Injectable } from '@nestjs/common';
+import { AlbumsRepository } from '../DB/albums-db';
+import { TracksService } from '../tracks/tracks.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Injectable()
 export class AlbumsService {
+  private albums: AlbumsRepository;
+
+  constructor(private tracksService: TracksService) {
+    this.albums = new AlbumsRepository();
+  }
+
   create(createAlbumDto: CreateAlbumDto) {
-    return 'This action adds a new album';
+    return this.albums.create(createAlbumDto);
   }
 
   findAll() {
-    return `This action returns all albums`;
+    return this.albums.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} album`;
+  findOne(id: string) {
+    return this.albums.findOne(id);
   }
 
-  update(id: number, updateAlbumDto: UpdateAlbumDto) {
-    return `This action updates a #${id} album`;
+  update(id: string, updateAlbumDto: UpdateAlbumDto) {
+    return this.albums.update(id, updateAlbumDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} album`;
+  async remove(id: string) {
+    await this.tracksService.removeAlbumId(id);
+
+    return this.albums.remove(id);
+  }
+
+  removeArtistId(artistId: string) {
+    return this.albums.removeArtistId(artistId);
   }
 }
