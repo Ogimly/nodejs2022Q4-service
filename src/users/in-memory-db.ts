@@ -3,22 +3,22 @@ import { HttpStatus } from '@nestjs/common';
 import { DBErrors } from '../common/enums';
 import { RequestResult } from '../common/interfaces';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 export class UsersRepository {
-  private users: User[] = [];
+  private users: UserEntity[] = [];
 
-  public async create(createUserDto: CreateUserDto): Promise<RequestResult<User>> {
+  public async create(createUserDto: CreateUserDto): Promise<RequestResult<UserEntity>> {
     const newDate = Date.now();
 
-    const newUser: User = {
+    const newUser = new UserEntity({
       ...createUserDto,
       id: uuid.v4(),
-      version: 0,
+      version: 1,
       createdAt: newDate,
       updatedAt: newDate,
-    };
+    });
     this.users.push(newUser);
 
     return {
@@ -27,14 +27,14 @@ export class UsersRepository {
     };
   }
 
-  public async findAll(): Promise<RequestResult<User[]>> {
+  public async findAll(): Promise<RequestResult<UserEntity[]>> {
     return {
       data: this.users,
       status: HttpStatus.OK,
     };
   }
 
-  public async findOne(userId: string): Promise<RequestResult<User>> {
+  public async findOne(userId: string): Promise<RequestResult<UserEntity>> {
     const user = this.users.find(({ id }) => id === userId);
 
     if (!user) {
@@ -54,7 +54,7 @@ export class UsersRepository {
   public async update(
     userId: string,
     updateUserDto: UpdateUserDto
-  ): Promise<RequestResult<User>> {
+  ): Promise<RequestResult<UserEntity>> {
     const foundUser = this.users.find(({ id }) => id === userId);
 
     if (!foundUser)
@@ -81,7 +81,7 @@ export class UsersRepository {
     };
   }
 
-  public async remove(userId: string): Promise<RequestResult<User>> {
+  public async remove(userId: string): Promise<RequestResult<UserEntity>> {
     const index = this.users.findIndex(({ id }) => id === userId);
 
     if (index === -1) {

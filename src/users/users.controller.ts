@@ -1,18 +1,26 @@
 import {
+  UsePipes,
+  ValidationPipe,
+  UseInterceptors,
+  ClassSerializerInterceptor,
   Controller,
-  Get,
   Post,
   Body,
-  Param,
-  Delete,
   HttpException,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Put,
+  Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { HttpCode, Put } from '@nestjs/common/decorators';
 
-@Controller('users')
+@UsePipes(new ValidationPipe())
+@UseInterceptors(ClassSerializerInterceptor)
+@Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -39,7 +47,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     const res = await this.usersService.findOne(id);
 
     if (res.error) {
@@ -50,7 +58,10 @@ export class UsersController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateUserDto: UpdateUserDto
+  ) {
     const res = await this.usersService.update(id, updateUserDto);
 
     if (res.error) {
@@ -62,7 +73,7 @@ export class UsersController {
 
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
     const res = await this.usersService.remove(id);
 
     if (res.error) {
