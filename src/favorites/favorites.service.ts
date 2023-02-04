@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { forwardRef, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { AlbumsService } from '../albums/albums.service';
 import { TracksService } from '../tracks/tracks.service';
 import { ArtistsService } from '../artists/artists.service';
@@ -10,9 +10,14 @@ export class FavoritesService {
   private favorites: FavoritesRepository;
 
   constructor(
+    @Inject(forwardRef(() => ArtistsService))
     private artistsService: ArtistsService,
-    private tracksService: TracksService,
-    private albumsService: AlbumsService
+
+    @Inject(forwardRef(() => AlbumsService))
+    private albumsService: AlbumsService,
+
+    @Inject(forwardRef(() => TracksService))
+    private tracksService: TracksService
   ) {
     this.favorites = new FavoritesRepository();
   }

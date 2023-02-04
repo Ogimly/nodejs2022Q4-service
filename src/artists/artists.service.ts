@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { AlbumsService } from '../albums/albums.service';
 import { ArtistsRepository } from '../common/DB/artisrs-db';
+import { FavoritesService } from '../favorites/favorites.service';
 import { TracksService } from '../tracks/tracks.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
@@ -10,8 +11,14 @@ export class ArtistsService {
   private artists: ArtistsRepository;
 
   constructor(
+    @Inject(forwardRef(() => TracksService))
     private tracksService: TracksService,
-    private albumsService: AlbumsService
+
+    @Inject(forwardRef(() => AlbumsService))
+    private albumsService: AlbumsService,
+
+    @Inject(forwardRef(() => FavoritesService))
+    private favoritesService: FavoritesService
   ) {
     this.artists = new ArtistsRepository();
   }
@@ -35,6 +42,7 @@ export class ArtistsService {
   async remove(id: string) {
     await this.tracksService.removeArtistId(id);
     await this.albumsService.removeArtistId(id);
+    await this.favoritesService.removeArtist(id);
 
     return this.artists.remove(id);
   }

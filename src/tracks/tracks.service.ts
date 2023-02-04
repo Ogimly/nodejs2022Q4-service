@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { TracksRepository } from '../common/DB/tracks-db';
+import { FavoritesService } from '../favorites/favorites.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 
@@ -7,7 +8,10 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 export class TracksService {
   private tracks: TracksRepository;
 
-  constructor() {
+  constructor(
+    @Inject(forwardRef(() => FavoritesService))
+    private favoritesService: FavoritesService
+  ) {
     this.tracks = new TracksRepository();
   }
 
@@ -27,7 +31,9 @@ export class TracksService {
     return this.tracks.update(id, updateTrackDto);
   }
 
-  remove(id: string) {
+  async remove(id: string) {
+    await this.favoritesService.removeTrack(id);
+
     return this.tracks.remove(id);
   }
 
