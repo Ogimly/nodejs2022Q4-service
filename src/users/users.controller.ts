@@ -21,6 +21,7 @@ import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -105,7 +106,7 @@ export class UsersController {
   @Delete(':userId')
   @HttpCode(204)
   @ApiOperation({ summary: UserApiText.delSum, description: UserApiText.delDesc })
-  @ApiOkResponse({ description: UserApiText.delOk })
+  @ApiNoContentResponse({ description: UserApiText.delOk })
   @ApiBadRequestResponse({ description: UserApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })

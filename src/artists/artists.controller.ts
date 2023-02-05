@@ -15,6 +15,7 @@ import {
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -103,7 +104,7 @@ export class ArtistsController {
   @Delete(':id')
   @HttpCode(204)
   @ApiOperation({ summary: ArtistApiText.delSum, description: ArtistApiText.delDesc })
-  @ApiOkResponse({ description: ArtistApiText.delOk })
+  @ApiNoContentResponse({ description: ArtistApiText.delOk })
   @ApiBadRequestResponse({ description: ArtistApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
   @ApiNotFoundResponse({ description: ArtistApiText.NotFound })

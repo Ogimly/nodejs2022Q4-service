@@ -13,6 +13,7 @@ import {
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -95,7 +96,7 @@ export class FavoritesController {
   @Delete('artist/:id')
   @HttpCode(204)
   @ApiOperation({ summary: FavApiText.artDelSum, description: FavApiText.artDelDesc })
-  @ApiOkResponse({ description: FavApiText.delOk })
+  @ApiNoContentResponse({ description: FavApiText.delOk })
   @ApiBadRequestResponse({ description: FavApiText.artBadRequest })
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiNotFoundResponse({ description: FavApiText.artNotFound })
@@ -112,7 +113,7 @@ export class FavoritesController {
   @Delete('track/:id')
   @HttpCode(204)
   @ApiOperation({ summary: FavApiText.trDelSum, description: FavApiText.trDelDesc })
-  @ApiOkResponse({ description: FavApiText.delOk })
+  @ApiNoContentResponse({ description: FavApiText.delOk })
   @ApiBadRequestResponse({ description: FavApiText.trBadRequest })
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiNotFoundResponse({ description: FavApiText.trNotFound })
@@ -129,7 +130,7 @@ export class FavoritesController {
   @Delete('album/:id')
   @HttpCode(204)
   @ApiOperation({ summary: FavApiText.albDelSum, description: FavApiText.albDelDesc })
-  @ApiOkResponse({ description: FavApiText.delOk })
+  @ApiNoContentResponse({ description: FavApiText.delOk })
   @ApiBadRequestResponse({ description: FavApiText.albBadRequest })
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiNotFoundResponse({ description: FavApiText.albNotFound })

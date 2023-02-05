@@ -18,6 +18,7 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -100,7 +101,7 @@ export class TracksController {
   @Delete(':id')
   @HttpCode(204)
   @ApiOperation({ summary: TrackApiText.delSum, description: TrackApiText.delDesc })
-  @ApiOkResponse({ description: TrackApiText.delOk })
+  @ApiNoContentResponse({ description: TrackApiText.delOk })
   @ApiBadRequestResponse({ description: TrackApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
   @ApiNotFoundResponse({ description: TrackApiText.NotFound })

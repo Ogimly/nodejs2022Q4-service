@@ -15,6 +15,7 @@ import {
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -100,7 +101,7 @@ export class AlbumsController {
   @Delete(':id')
   @HttpCode(204)
   @ApiOperation({ summary: AlbumApiText.delSum, description: AlbumApiText.delDesc })
-  @ApiOkResponse({ description: AlbumApiText.delOk })
+  @ApiNoContentResponse({ description: AlbumApiText.delOk })
   @ApiBadRequestResponse({ description: AlbumApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
   @ApiNotFoundResponse({ description: AlbumApiText.NotFound })
