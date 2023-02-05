@@ -46,3 +46,30 @@ export const enum UserApiText {
   delDesc = `Deletes user by ID`,
   delOk = 'The user has been deleted',
 }
+
+export const enum ArtistApiText {
+  tag = 'Artists',
+
+  Ok = 'Successful operation',
+  Unauthorized = 'Access token is missing or invalid',
+  NotFound = 'Artists not found',
+  BadRequest = 'Bad request. artistId is invalid (not uuid)',
+
+  getSum = 'Gets all artists',
+  getDesc = 'Gets all artists',
+
+  createSum = 'Add new artist',
+  createDesc = 'Add new artist',
+  createBadRequest = 'Bad request. Body does not contain required fields',
+
+  getIdSum = 'Get single artist by id',
+  getIdDesc = 'Get single artist by id',
+
+  putSum = `Update artist information`,
+  putDesc = `Update artist information by UUID`,
+  putOk = 'The artist has been updated',
+
+  delSum = `Delete artist`,
+  delDesc = `Delete artist from library`,
+  delOk = 'Deleted successfully',
+}

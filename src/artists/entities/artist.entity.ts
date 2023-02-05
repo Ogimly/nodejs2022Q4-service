@@ -1,6 +1,13 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export class ArtistEntity {
-  id: string; // uuid v4
+  @ApiProperty({ description: 'uuid v4', format: 'uuid' })
+  id: string;
+
+  @ApiProperty({ description: 'artist name', example: 'Freddie Mercury' })
   name: string;
+
+  @ApiProperty({ description: 'artist has Grammy', example: 'false' })
   grammy: boolean;
 
   constructor(partial: Partial<ArtistEntity>) {
