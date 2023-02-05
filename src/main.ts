@@ -11,6 +11,12 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Home Library Service')
     .setDescription('Home music library service API description')
+    .addServer('http://localhost:4000/')
+    .addTag('Users')
+    .addTag('Artists')
+    .addTag('Albums')
+    .addTag('Tracks')
+    .addTag('Favorites')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
