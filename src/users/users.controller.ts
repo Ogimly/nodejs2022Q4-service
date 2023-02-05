@@ -28,7 +28,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
-import { ApiText, UserApiText } from '../common/enums';
+import { UserApiText } from '../common/enums';
 
 @UsePipes(new ValidationPipe())
 @UseInterceptors(ClassSerializerInterceptor)
@@ -38,9 +38,9 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @ApiOperation({ summary: UserApiText.getS, description: UserApiText.getD })
-  @ApiOkResponse({ description: ApiText.ok, type: [UserEntity] })
-  @ApiUnauthorizedResponse({ description: ApiText.unauthorized })
+  @ApiOperation({ summary: UserApiText.getSum, description: UserApiText.getDesc })
+  @ApiOkResponse({ description: UserApiText.Ok, type: [UserEntity] })
+  @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   async findAll() {
     const res = await this.usersService.findAll();
 
@@ -52,10 +52,10 @@ export class UsersController {
   }
 
   @Post()
-  @ApiOperation({ summary: UserApiText.createS, description: UserApiText.createD })
+  @ApiOperation({ summary: UserApiText.createSum, description: UserApiText.createDesc })
   @ApiCreatedResponse({ description: UserApiText.createOk, type: UserEntity })
-  @ApiBadRequestResponse({ description: UserApiText.createBadReq })
-  @ApiUnauthorizedResponse({ description: ApiText.unauthorized })
+  @ApiBadRequestResponse({ description: UserApiText.createBadRequest })
+  @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   async create(@Body() createUserDto: CreateUserDto) {
     const res = await this.usersService.create(createUserDto);
 
@@ -67,10 +67,10 @@ export class UsersController {
   }
 
   @Get(':userId')
-  @ApiOperation({ summary: UserApiText.getIdS, description: UserApiText.getIdD })
-  @ApiOkResponse({ description: ApiText.ok, type: UserEntity })
+  @ApiOperation({ summary: UserApiText.getIdSum, description: UserApiText.getIdDesc })
+  @ApiOkResponse({ description: UserApiText.Ok, type: UserEntity })
   @ApiBadRequestResponse({ description: UserApiText.BadRequest })
-  @ApiUnauthorizedResponse({ description: ApiText.unauthorized })
+  @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })
   async findOne(@Param('userId', new ParseUUIDPipe()) id: string) {
     const res = await this.usersService.findOne(id);
@@ -83,10 +83,10 @@ export class UsersController {
   }
 
   @Put(':userId')
-  @ApiOperation({ summary: UserApiText.putS, description: UserApiText.putD })
+  @ApiOperation({ summary: UserApiText.putSum, description: UserApiText.putDesc })
   @ApiOkResponse({ description: UserApiText.putOk, type: UserEntity })
   @ApiBadRequestResponse({ description: UserApiText.BadRequest })
-  @ApiUnauthorizedResponse({ description: ApiText.unauthorized })
+  @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   @ApiForbiddenResponse({ description: UserApiText.putForbidden })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })
   async update(
@@ -104,10 +104,10 @@ export class UsersController {
 
   @Delete(':userId')
   @HttpCode(204)
-  @ApiOperation({ summary: UserApiText.delS, description: UserApiText.delD })
+  @ApiOperation({ summary: UserApiText.delSum, description: UserApiText.delDesc })
   @ApiOkResponse({ description: UserApiText.delOk })
   @ApiBadRequestResponse({ description: UserApiText.BadRequest })
-  @ApiUnauthorizedResponse({ description: ApiText.unauthorized })
+  @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })
   async remove(@Param('userId', new ParseUUIDPipe()) id: string) {
     const res = await this.usersService.remove(id);

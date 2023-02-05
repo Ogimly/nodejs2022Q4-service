@@ -18,33 +18,31 @@ export const enum DBMessages {
   AlbumNotInFavorites = 'Album not in favorites',
 }
 
-export const enum ApiText {
-  ok = 'Successful operation',
-  unauthorized = 'Access token is missing or invalid',
-}
-
 export const enum UserApiText {
   tag = 'Users',
+
+  Ok = 'Successful operation',
+  Unauthorized = 'Access token is missing or invalid',
   NotFound = 'User not found',
   BadRequest = 'Bad request. userId is invalid (not uuid)',
 
-  getS = 'Get all users',
-  getD = 'Get all users',
+  getSum = 'Get all users',
+  getDesc = 'Get all users',
 
-  createS = 'Create user',
-  createD = 'Creates a new user',
+  createSum = 'Create user',
+  createDesc = 'Creates a new user',
   createOk = 'The user has been created',
-  createBadReq = 'Bad request. Body does not contain required fields',
+  createBadRequest = 'Bad request. Body does not contain required fields',
 
-  getIdS = 'Get single user by id',
-  getIdD = 'Get single user by id',
+  getIdSum = 'Get single user by id',
+  getIdDesc = 'Get single user by id',
 
-  putS = `Update a user's password`,
-  putD = `Updates a user's password by ID`,
+  putSum = `Update a user's password`,
+  putDesc = `Updates a user's password by ID`,
   putOk = 'The user has been updated',
   putForbidden = 'oldPassword is wrong',
 
-  delS = `Delete user`,
-  delD = `Deletes user by ID`,
+  delSum = `Delete user`,
+  delDesc = `Deletes user by ID`,
   delOk = 'The user has been deleted',
 }
