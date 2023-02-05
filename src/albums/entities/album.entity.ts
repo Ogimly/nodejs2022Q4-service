@@ -1,8 +1,17 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export class AlbumEntity {
-  id: string; // uuid v4
+  @ApiProperty({ description: 'uuid v4', format: 'uuid' })
+  id: string;
+
+  @ApiProperty({ description: 'album name', example: 'Innuendo' })
   name: string;
+
+  @ApiProperty({ description: 'released', example: 1990 })
   year: number;
-  artistId: string | null; // refers to Artist
+
+  @ApiProperty({ description: 'refers to Artist', format: 'uuid' })
+  artistId: string | null;
 
   constructor(partial: Partial<AlbumEntity>) {
     Object.assign(this, partial);
