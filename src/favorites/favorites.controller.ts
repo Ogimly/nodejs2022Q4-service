@@ -10,16 +10,30 @@ import {
   HttpException,
   HttpCode,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+  ApiUnprocessableEntityResponse,
+} from '@nestjs/swagger';
+import { FavApiText } from '../common/enums';
+import { FavoriteEntity } from './entities/favorite.entity';
 import { FavoritesService } from './favorites.service';
 
 @UsePipes(new ValidationPipe())
-@ApiTags('Favorites')
+@ApiTags(FavApiText.tag)
 @Controller('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @Get()
+  @ApiOperation({ summary: FavApiText.getSum, description: FavApiText.getDesc })
+  @ApiOkResponse({ description: FavApiText.Ok, type: [FavoriteEntity] })
+  @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   async findAll() {
     const res = await this.favoritesService.findAll();
 
@@ -31,6 +45,11 @@ export class FavoritesController {
   }
 
   @Post('artist/:id')
+  @ApiOperation({ summary: FavApiText.artAddSum, description: FavApiText.artAddDesc })
+  @ApiCreatedResponse({ description: FavApiText.addOk })
+  @ApiBadRequestResponse({ description: FavApiText.artBadRequest })
+  @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
+  @ApiUnprocessableEntityResponse({ description: FavApiText.artUnpr })
   async addArtist(@Param('id', new ParseUUIDPipe()) id: string) {
     const res = await this.favoritesService.addArtist(id);
 
@@ -42,6 +61,11 @@ export class FavoritesController {
   }
 
   @Post('track/:id')
+  @ApiOperation({ summary: FavApiText.trAddSum, description: FavApiText.trAddDesc })
+  @ApiCreatedResponse({ description: FavApiText.addOk })
+  @ApiBadRequestResponse({ description: FavApiText.trBadRequest })
+  @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
+  @ApiUnprocessableEntityResponse({ description: FavApiText.trUnpr })
   async addTrack(@Param('id', new ParseUUIDPipe()) id: string) {
     const res = await this.favoritesService.addTrack(id);
 
@@ -53,6 +77,11 @@ export class FavoritesController {
   }
 
   @Post('album/:id')
+  @ApiOperation({ summary: FavApiText.albAddSum, description: FavApiText.albAddDesc })
+  @ApiCreatedResponse({ description: FavApiText.addOk })
+  @ApiBadRequestResponse({ description: FavApiText.albBadRequest })
+  @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
+  @ApiUnprocessableEntityResponse({ description: FavApiText.albUnpr })
   async addAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
     const res = await this.favoritesService.addAlbum(id);
 
@@ -65,6 +94,11 @@ export class FavoritesController {
 
   @Delete('artist/:id')
   @HttpCode(204)
+  @ApiOperation({ summary: FavApiText.artDelSum, description: FavApiText.artDelDesc })
+  @ApiOkResponse({ description: FavApiText.delOk })
+  @ApiBadRequestResponse({ description: FavApiText.artBadRequest })
+  @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
+  @ApiNotFoundResponse({ description: FavApiText.artNotFound })
   async removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
     const res = await this.favoritesService.removeArtist(id);
 
@@ -77,6 +111,11 @@ export class FavoritesController {
 
   @Delete('track/:id')
   @HttpCode(204)
+  @ApiOperation({ summary: FavApiText.trDelSum, description: FavApiText.trDelDesc })
+  @ApiOkResponse({ description: FavApiText.delOk })
+  @ApiBadRequestResponse({ description: FavApiText.trBadRequest })
+  @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
+  @ApiNotFoundResponse({ description: FavApiText.trNotFound })
   async removeTrack(@Param('id', new ParseUUIDPipe()) id: string) {
     const res = await this.favoritesService.removeTrack(id);
 
@@ -89,6 +128,11 @@ export class FavoritesController {
 
   @Delete('album/:id')
   @HttpCode(204)
+  @ApiOperation({ summary: FavApiText.albDelSum, description: FavApiText.albDelDesc })
+  @ApiOkResponse({ description: FavApiText.delOk })
+  @ApiBadRequestResponse({ description: FavApiText.albBadRequest })
+  @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
+  @ApiNotFoundResponse({ description: FavApiText.albNotFound })
   async removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
     const res = await this.favoritesService.removeAlbum(id);
 

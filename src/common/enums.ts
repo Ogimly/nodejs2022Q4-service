@@ -127,3 +127,42 @@ export const enum AlbumApiText {
   delDesc = `Delete album from library`,
   delOk = 'Deleted successfully',
 }
+
+export const enum FavApiText {
+  tag = 'Favorites',
+
+  Ok = 'Successful operation',
+  Unauthorized = 'Access token is missing or invalid',
+  addOk = 'Added successfully',
+  delOk = 'Deleted successfully',
+
+  getSum = 'Get all favorites',
+  getDesc = 'Gets all favorites artists, tracks and albums',
+
+  artBadRequest = 'Bad request. ArtistId is invalid (not uuid)',
+  artNotFound = 'Artist was not found',
+  artUnpr = `Artist with id doesn't exist`,
+
+  artAddSum = 'Add artist to the favorites',
+  artAddDesc = 'Add artist to the favorites',
+  artDelSum = 'Delete artist from favorites',
+  artDelDesc = 'Delete artist from favorites',
+
+  trBadRequest = 'Bad request. TrackId is invalid (not uuid)',
+  trNotFound = 'Track was not found',
+  trUnpr = `Track with id doesn't exist`,
+
+  trAddSum = 'Add track to the favorites',
+  trAddDesc = 'Add track to the favorites',
+  trDelSum = 'Delete track from favorites',
+  trDelDesc = 'Delete track from favorites',
+
+  albBadRequest = 'Bad request. AlbumId is invalid (not uuid)',
+  albNotFound = 'Album was not found',
+  albUnpr = `Album with id doesn't exist`,
+
+  albAddSum = 'Add album to the favorites',
+  albAddDesc = 'Add album to the favorites',
+  albDelSum = 'Delete album from favorites',
+  albDelDesc = 'Delete album from favorites',
+}
