@@ -29,9 +29,14 @@ export class FavoritesService {
 
     return {
       data: {
-        artists: (await this.artistsService.findAll(artistIds)).data,
-        tracks: (await this.tracksService.findAll(trackIds)).data,
-        albums: (await this.albumsService.findAll(albumIds)).data,
+        artists:
+          artistIds.length === 0
+            ? []
+            : (await this.artistsService.findAll(artistIds)).data,
+        tracks:
+          trackIds.length === 0 ? [] : (await this.tracksService.findAll(trackIds)).data,
+        albums:
+          albumIds.length === 0 ? [] : (await this.albumsService.findAll(albumIds)).data,
       },
       status: HttpStatus.OK,
     };
