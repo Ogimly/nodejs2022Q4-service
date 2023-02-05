@@ -1,9 +1,20 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export class TrackEntity {
-  id: string; // uuid v4
+  @ApiProperty({ description: 'uuid v4', format: 'uuid' })
+  id: string;
+
+  @ApiProperty({ description: 'track name', example: 'The Show Must Go On' })
   name: string;
-  artistId: string | null; // refers to Artist
-  albumId: string | null; // refers to Album
-  duration: number; // integer number
+
+  @ApiProperty({ description: 'refers to Artist', format: 'uuid' })
+  artistId: string | null;
+
+  @ApiProperty({ description: 'refers to Album', format: 'uuid' })
+  albumId: string | null;
+
+  @ApiProperty({ description: 'track duration', example: 262 })
+  duration: number;
 
   constructor(partial: Partial<TrackEntity>) {
     Object.assign(this, partial);

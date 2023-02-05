@@ -2,25 +2,25 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateTrackDto {
-  @ApiProperty()
+  @ApiProperty({ description: 'track name', example: 'The Show Must Go On' })
   @IsNotEmpty()
   @IsString()
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'refers to Artist', format: 'uuid' })
   @IsNotEmpty()
   @IsString()
   @IsOptional()
-  artistId: string; // refers to Artist
+  artistId: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'refers to Album', format: 'uuid' })
   @IsNotEmpty()
   @IsString()
   @IsOptional()
-  albumId: string; // refers to Album
+  albumId: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'track duration', example: 262 })
   @IsNotEmpty()
   @IsNumber()
-  duration: number; // integer number
+  duration: number;
 }

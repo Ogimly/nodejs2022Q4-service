@@ -28,7 +28,7 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistEntity } from './entities/artist.entity';
 
 @UsePipes(new ValidationPipe())
-@ApiTags('Artists')
+@ApiTags(ArtistApiText.tag)
 @Controller('artist')
 export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
@@ -83,7 +83,7 @@ export class ArtistsController {
 
   @Put(':id')
   @ApiOperation({ summary: ArtistApiText.putSum, description: ArtistApiText.putDesc })
-  @ApiOkResponse({ description: ArtistApiText.putOk, type: ArtistEntity })
+  @ApiOkResponse({ description: ArtistApiText.putOk, type: UpdateArtistDto })
   @ApiBadRequestResponse({ description: ArtistApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
   @ApiNotFoundResponse({ description: ArtistApiText.NotFound })

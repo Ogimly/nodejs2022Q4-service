@@ -52,8 +52,8 @@ export const enum ArtistApiText {
 
   Ok = 'Successful operation',
   Unauthorized = 'Access token is missing or invalid',
-  NotFound = 'Artists not found',
-  BadRequest = 'Bad request. artistId is invalid (not uuid)',
+  NotFound = 'Artist not found',
+  BadRequest = 'Bad request. ArtistId is invalid (not uuid)',
 
   getSum = 'Gets all artists',
   getDesc = 'Gets all artists',
@@ -71,5 +71,32 @@ export const enum ArtistApiText {
 
   delSum = `Delete artist`,
   delDesc = `Delete artist from library`,
+  delOk = 'Deleted successfully',
+}
+
+export const enum TrackApiText {
+  tag = 'Tracks',
+
+  Ok = 'Successful operation',
+  Unauthorized = 'Access token is missing or invalid',
+  NotFound = 'Track not found',
+  BadRequest = 'Bad request. TrackId is invalid (not uuid)',
+
+  getSum = 'Get tracks list',
+  getDesc = 'Gets all library tracks list',
+
+  createSum = 'Add new track',
+  createDesc = 'Add new track information',
+  createBadRequest = 'Bad request. Body does not contain required fields',
+
+  getIdSum = 'Get single track by id',
+  getIdDesc = 'Get single track by id',
+
+  putSum = `Update track information`,
+  putDesc = `Update library track information by UUID`,
+  putOk = 'The track has been updated',
+
+  delSum = `Delete track`,
+  delDesc = `Delete track from library`,
   delOk = 'Deleted successfully',
 }
