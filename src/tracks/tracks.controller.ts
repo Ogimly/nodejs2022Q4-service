@@ -10,7 +10,6 @@ import {
   ValidationPipe,
   ParseUUIDPipe,
   HttpCode,
-  HttpException,
 } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
@@ -38,14 +37,8 @@ export class TracksController {
   @ApiOperation({ summary: TrackApiText.getSum, description: TrackApiText.getDesc })
   @ApiOkResponse({ description: TrackApiText.Ok, type: [TrackEntity] })
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
-  async findAll() {
-    const res = await this.tracksService.findAll();
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  findAll() {
+    return this.tracksService.findAll();
   }
 
   @Post()
@@ -53,14 +46,8 @@ export class TracksController {
   @ApiCreatedResponse({ description: TrackApiText.Ok, type: TrackEntity })
   @ApiBadRequestResponse({ description: TrackApiText.createBadRequest })
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
-  async create(@Body() createTrackDto: CreateTrackDto) {
-    const res = await this.tracksService.create(createTrackDto);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  create(@Body() createTrackDto: CreateTrackDto) {
+    return this.tracksService.create(createTrackDto);
   }
 
   @Get(':id')
@@ -69,14 +56,8 @@ export class TracksController {
   @ApiBadRequestResponse({ description: TrackApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
   @ApiNotFoundResponse({ description: TrackApiText.NotFound })
-  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const res = await this.tracksService.findOne(id);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.tracksService.findOne(id);
   }
 
   @Put(':id')
@@ -85,17 +66,11 @@ export class TracksController {
   @ApiBadRequestResponse({ description: TrackApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
   @ApiNotFoundResponse({ description: TrackApiText.NotFound })
-  async update(
+  update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateTrackDto: UpdateTrackDto
   ) {
-    const res = await this.tracksService.update(id, updateTrackDto);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+    return this.tracksService.update(id, updateTrackDto);
   }
 
   @Delete(':id')
@@ -105,13 +80,7 @@ export class TracksController {
   @ApiBadRequestResponse({ description: TrackApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
   @ApiNotFoundResponse({ description: TrackApiText.NotFound })
-  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const res = await this.tracksService.remove(id);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.tracksService.remove(id);
   }
 }

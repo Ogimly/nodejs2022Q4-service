@@ -10,7 +10,6 @@ import {
   ValidationPipe,
   ParseUUIDPipe,
   HttpCode,
-  HttpException,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -38,14 +37,8 @@ export class ArtistsController {
   @ApiOperation({ summary: ArtistApiText.getSum, description: ArtistApiText.getDesc })
   @ApiOkResponse({ description: ArtistApiText.Ok, type: [ArtistEntity] })
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
-  async findAll() {
-    const res = await this.artistsService.findAll();
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  findAll() {
+    return this.artistsService.findAll();
   }
 
   @Post()
@@ -56,14 +49,8 @@ export class ArtistsController {
   @ApiCreatedResponse({ description: ArtistApiText.Ok, type: ArtistEntity })
   @ApiBadRequestResponse({ description: ArtistApiText.createBadRequest })
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
-  async create(@Body() createArtistDto: CreateArtistDto) {
-    const res = await this.artistsService.create(createArtistDto);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  create(@Body() createArtistDto: CreateArtistDto) {
+    return this.artistsService.create(createArtistDto);
   }
 
   @Get(':id')
@@ -72,14 +59,8 @@ export class ArtistsController {
   @ApiBadRequestResponse({ description: ArtistApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
   @ApiNotFoundResponse({ description: ArtistApiText.NotFound })
-  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const res = await this.artistsService.findOne(id);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.artistsService.findOne(id);
   }
 
   @Put(':id')
@@ -88,17 +69,11 @@ export class ArtistsController {
   @ApiBadRequestResponse({ description: ArtistApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
   @ApiNotFoundResponse({ description: ArtistApiText.NotFound })
-  async update(
+  update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateArtistDto: UpdateArtistDto
   ) {
-    const res = await this.artistsService.update(id, updateArtistDto);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+    return this.artistsService.update(id, updateArtistDto);
   }
 
   @Delete(':id')
@@ -108,13 +83,7 @@ export class ArtistsController {
   @ApiBadRequestResponse({ description: ArtistApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
   @ApiNotFoundResponse({ description: ArtistApiText.NotFound })
-  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const res = await this.artistsService.remove(id);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.artistsService.remove(id);
   }
 }

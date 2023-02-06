@@ -6,7 +6,6 @@ import {
   Controller,
   Post,
   Body,
-  HttpException,
   Get,
   Param,
   ParseUUIDPipe,
@@ -42,14 +41,8 @@ export class UsersController {
   @ApiOperation({ summary: UserApiText.getSum, description: UserApiText.getDesc })
   @ApiOkResponse({ description: UserApiText.Ok, type: [UserEntity] })
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
-  async findAll() {
-    const res = await this.usersService.findAll();
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  findAll() {
+    return this.usersService.findAll();
   }
 
   @Post()
@@ -57,14 +50,8 @@ export class UsersController {
   @ApiCreatedResponse({ description: UserApiText.createOk, type: UserEntity })
   @ApiBadRequestResponse({ description: UserApiText.createBadRequest })
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
-  async create(@Body() createUserDto: CreateUserDto) {
-    const res = await this.usersService.create(createUserDto);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
   }
 
   @Get(':userId')
@@ -73,14 +60,8 @@ export class UsersController {
   @ApiBadRequestResponse({ description: UserApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })
-  async findOne(@Param('userId', new ParseUUIDPipe()) id: string) {
-    const res = await this.usersService.findOne(id);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  findOne(@Param('userId', new ParseUUIDPipe()) id: string) {
+    return this.usersService.findOne(id);
   }
 
   @Put(':userId')
@@ -90,17 +71,11 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   @ApiForbiddenResponse({ description: UserApiText.putForbidden })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })
-  async update(
+  update(
     @Param('userId', new ParseUUIDPipe()) id: string,
     @Body() updateUserDto: UpdateUserDto
   ) {
-    const res = await this.usersService.update(id, updateUserDto);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':userId')
@@ -110,13 +85,7 @@ export class UsersController {
   @ApiBadRequestResponse({ description: UserApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })
-  async remove(@Param('userId', new ParseUUIDPipe()) id: string) {
-    const res = await this.usersService.remove(id);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return '';
+  remove(@Param('userId', new ParseUUIDPipe()) id: string) {
+    return this.usersService.remove(id);
   }
 }

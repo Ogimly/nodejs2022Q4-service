@@ -9,7 +9,6 @@ import {
   UsePipes,
   ValidationPipe,
   ParseUUIDPipe,
-  HttpException,
   HttpCode,
 } from '@nestjs/common';
 import {
@@ -38,14 +37,8 @@ export class AlbumsController {
   @ApiOperation({ summary: AlbumApiText.getSum, description: AlbumApiText.getDesc })
   @ApiOkResponse({ description: AlbumApiText.Ok, type: [AlbumEntity] })
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
-  async findAll() {
-    const res = await this.albumsService.findAll();
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  findAll() {
+    return this.albumsService.findAll();
   }
 
   @Post()
@@ -53,14 +46,8 @@ export class AlbumsController {
   @ApiCreatedResponse({ description: AlbumApiText.Ok, type: AlbumEntity })
   @ApiBadRequestResponse({ description: AlbumApiText.createBadRequest })
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
-  async create(@Body() createAlbumDto: CreateAlbumDto) {
-    const res = await this.albumsService.create(createAlbumDto);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  create(@Body() createAlbumDto: CreateAlbumDto) {
+    return this.albumsService.create(createAlbumDto);
   }
 
   @Get(':id')
@@ -69,14 +56,8 @@ export class AlbumsController {
   @ApiBadRequestResponse({ description: AlbumApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
   @ApiNotFoundResponse({ description: AlbumApiText.NotFound })
-  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const res = await this.albumsService.findOne(id);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.albumsService.findOne(id);
   }
 
   @Put(':id')
@@ -85,17 +66,11 @@ export class AlbumsController {
   @ApiBadRequestResponse({ description: AlbumApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
   @ApiNotFoundResponse({ description: AlbumApiText.NotFound })
-  async update(
+  update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto
   ) {
-    const res = await this.albumsService.update(id, updateAlbumDto);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+    return this.albumsService.update(id, updateAlbumDto);
   }
 
   @Delete(':id')
@@ -105,13 +80,7 @@ export class AlbumsController {
   @ApiBadRequestResponse({ description: AlbumApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
   @ApiNotFoundResponse({ description: AlbumApiText.NotFound })
-  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const res = await this.albumsService.remove(id);
-
-    if (res.error) {
-      throw new HttpException(res.error, res.status);
-    }
-
-    return res.data;
+  remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.albumsService.remove(id);
   }
 }
