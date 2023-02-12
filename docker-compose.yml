@@ -1,0 +1,14 @@
+version: '3.0'
+
+services:
+  app:
+    image: app-home-library
+    container_name: app-home-library
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:${PORT}
