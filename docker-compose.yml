@@ -1,9 +1,8 @@
 version: '3.0'
 
 services:
-  db:
-    image: db-home-library
-    container_name: db-home-library
+  database:
+    # image: db-home-library
     build: ./db
     restart: unless-stopped
     env_file:
@@ -22,8 +21,7 @@ services:
       - net
 
   app:
-    image: app-home-library
-    container_name: app-home-library
+    # image: app-home-library
     build: ./
     restart: unless-stopped
     env_file:
@@ -34,15 +32,16 @@ services:
       - PORT=${PORT}
     volumes:
       - .:/usr/app/
-      - /usr/app/node_modules
+      - node-modules:/usr/app/node_modules
     depends_on:
-      - db
+      - database
     networks:
       - net
 
 volumes:
   logs:
   data:
+  node-modules:
 
 networks:
   net:
