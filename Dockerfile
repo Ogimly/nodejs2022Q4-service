@@ -8,6 +8,6 @@ RUN npm i
 
 COPY . .
 
-EXPOSE 4000
+EXPOSE ${PORT}
 
-CMD [ "npm", "run", "start:dev"]
+CMD [ "npm", "run", "start:nodemon"]

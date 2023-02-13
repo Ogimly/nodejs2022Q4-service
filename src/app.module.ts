@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-// import { AppController } from './app.controller';
-// import { AppService } from './app.service';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ArtistsModule } from './artists/artists.module';
 import { TracksModule } from './tracks/tracks.module';
@@ -11,8 +11,9 @@ import { ErrorInterceptor } from './error/error.interceptor';
 
 @Module({
   imports: [UsersModule, ArtistsModule, AlbumsModule, TracksModule, FavoritesModule],
-  // controllers: [AppController],
+  controllers: [AppController],
   providers: [
+    AppService,
     {
       provide: APP_INTERCEPTOR,
       useClass: ErrorInterceptor,

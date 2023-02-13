@@ -1,14 +1,49 @@
 version: '3.0'
 
 services:
+  db:
+    image: db-home-library
+    container_name: db-home-library
+    build: ./db
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PGPORT=${DB_PORT}
+    volumes:
+      - data:/var/lib/postgresql/data
+      - logs:/var/lib/postgresql/logs
+    networks:
+      - net
+
   app:
     image: app-home-library
     container_name: app-home-library
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    build: ./
     restart: unless-stopped
     env_file:
       - .env
     ports:
       - ${PORT}:${PORT}
+    environment:
+      - PORT=${PORT}
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    depends_on:
+      - db
+    networks:
+      - net
+
+volumes:
+  logs:
+  data:
+
+networks:
+  net:
+    driver: bridge

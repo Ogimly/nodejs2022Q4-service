@@ -20,7 +20,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "docker": "docker-compose up"
+    "docker": "docker-compose up",
+    "start:nodemon": "nodemon --exitcrash -L src/main.ts"
   },
   "dependencies": {
     "@nestjs/common": "^9.3.2",
@@ -57,6 +58,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^27.2.5",
+    "nodemon": "^2.0.20",
     "prettier": "^2.3.2",
     "source-map-support": "^0.5.20",
     "supertest": "^6.2.3",
