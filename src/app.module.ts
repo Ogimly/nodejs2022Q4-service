@@ -8,9 +8,17 @@ import { AlbumsModule } from './albums/albums.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ErrorInterceptor } from './error/error.interceptor';
+import { PrismaModule } from './common/prisma/prisma.module';
 
 @Module({
-  imports: [UsersModule, ArtistsModule, AlbumsModule, TracksModule, FavoritesModule],
+  imports: [
+    UsersModule,
+    ArtistsModule,
+    AlbumsModule,
+    TracksModule,
+    FavoritesModule,
+    PrismaModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,

@@ -10,7 +10,7 @@ export class UsersRepository {
   private users: UserEntity[] = [];
 
   public async create(createUserDto: CreateUserDto): Promise<RequestResult<UserEntity>> {
-    const newDate = Date.now();
+    const newDate = new Date(); // Date.now();
 
     const newUser = new UserEntity({
       ...createUserDto,
@@ -72,7 +72,7 @@ export class UsersRepository {
       };
 
     foundUser.version++;
-    foundUser.updatedAt = Date.now();
+    foundUser.updatedAt = new Date(); // Date.now();
     foundUser.password = updateUserDto.newPassword;
 
     return {

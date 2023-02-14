@@ -15,10 +15,10 @@ export class UserEntity {
   version: number;
 
   @ApiProperty({ description: 'timestamp of creation', example: 1655000000 })
-  createdAt: number;
+  createdAt: Date;
 
   @ApiProperty({ description: 'timestamp of last update', example: 1655000000 })
-  updatedAt: number;
+  updatedAt: Date;
 
   constructor(partial: Partial<UserEntity>) {
     Object.assign(this, partial);
