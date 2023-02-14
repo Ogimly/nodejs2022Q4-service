@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE ${PORT}
 
-CMD [ "npm", "run", "start:nodemon"]
+CMD [ "npm", "run", "start:prisma"]

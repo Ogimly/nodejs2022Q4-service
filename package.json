@@ -21,7 +21,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "docker": "docker-compose up",
-    "start:nodemon": "nodemon --exitcrash -L src/main.ts"
+    "start:nodemon": "nodemon --exitcrash -L src/main.ts",
+    "start:prisma": "npx prisma generate && npx prisma migrate dev && nodemon --exitcrash -L src/main.ts"
   },
   "dependencies": {
     "@nestjs/common": "^9.3.2",
