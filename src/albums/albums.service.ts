@@ -1,11 +1,13 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { DBMessages } from '../common/enums';
+import { RequestResult } from '../common/interfaces';
 import { PrismaService } from '../common/prisma/prisma.service';
 // import { AlbumsRepository } from '../common/DB/albums-db';
 // import { FavoritesService } from '../favorites/favorites.service';
 // import { TracksService } from '../tracks/tracks.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { AlbumEntity } from './entities/album.entity';
 
 @Injectable()
 export class AlbumsService {
@@ -22,7 +24,7 @@ export class AlbumsService {
   // }
   constructor(private prisma: PrismaService) {}
 
-  async create(createAlbumDto: CreateAlbumDto) {
+  async create(createAlbumDto: CreateAlbumDto): Promise<RequestResult<AlbumEntity>> {
     const newAlbum = await this.prisma.album.create({
       data: createAlbumDto,
     });
@@ -33,7 +35,7 @@ export class AlbumsService {
     };
   }
 
-  async findAll(ids: string[] = []) {
+  async findAll(ids: string[] = []): Promise<RequestResult<AlbumEntity[]>> {
     const albums = await this.prisma.album.findMany();
     return {
       data: albums,
@@ -41,7 +43,7 @@ export class AlbumsService {
     };
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<RequestResult<AlbumEntity>> {
     const foundAlbum = await this.prisma.album.findUnique({ where: { id } });
 
     if (!foundAlbum)
@@ -57,7 +59,10 @@ export class AlbumsService {
     };
   }
 
-  async update(id: string, updateAlbumDto: UpdateAlbumDto) {
+  async update(
+    id: string,
+    updateAlbumDto: UpdateAlbumDto
+  ): Promise<RequestResult<AlbumEntity>> {
     const foundAlbum = await this.prisma.album.findUnique({ where: { id } });
 
     if (!foundAlbum)
@@ -78,7 +83,7 @@ export class AlbumsService {
     };
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<RequestResult<AlbumEntity>> {
     const foundAlbum = await this.prisma.album.findUnique({ where: { id } });
 
     if (!foundAlbum)

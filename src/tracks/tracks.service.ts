@@ -1,47 +1,110 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { TracksRepository } from '../common/DB/tracks-db';
-import { FavoritesService } from '../favorites/favorites.service';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { DBMessages } from '../common/enums';
+import { RequestResult } from '../common/interfaces';
+import { PrismaService } from '../common/prisma/prisma.service';
+// import { TracksRepository } from '../common/DB/tracks-db';
+// import { FavoritesService } from '../favorites/favorites.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
+import { TrackEntity } from './entities/track.entity';
 
 @Injectable()
 export class TracksService {
-  private tracks: TracksRepository;
+  // private tracks: TracksRepository;
 
-  constructor(
-    @Inject(forwardRef(() => FavoritesService))
-    private favoritesService: FavoritesService
-  ) {
-    this.tracks = new TracksRepository();
+  // constructor(
+  //   @Inject(forwardRef(() => FavoritesService))
+  //   private favoritesService: FavoritesService
+  // ) {
+  //   this.tracks = new TracksRepository();
+  // }
+  constructor(private prisma: PrismaService) {}
+
+  async create(createTrackDto: CreateTrackDto): Promise<RequestResult<TrackEntity>> {
+    const newTrack = await this.prisma.track.create({
+      data: createTrackDto,
+    });
+
+    return {
+      data: newTrack,
+      status: HttpStatus.CREATED,
+    };
   }
 
-  create(createTrackDto: CreateTrackDto) {
-    return this.tracks.create(createTrackDto);
+  async findAll(ids: string[] = []): Promise<RequestResult<TrackEntity[]>> {
+    // return this.tracks.findAll(ids);
+    const tracks = await this.prisma.track.findMany();
+    return {
+      data: tracks,
+      status: HttpStatus.OK,
+    };
   }
 
-  findAll(ids: string[] = []) {
-    return this.tracks.findAll(ids);
+  async findOne(id: string): Promise<RequestResult<TrackEntity>> {
+    const foundTrack = await this.prisma.track.findUnique({ where: { id } });
+
+    if (!foundTrack)
+      return {
+        data: null,
+        status: HttpStatus.NOT_FOUND,
+        error: DBMessages.TrackNotFound,
+      };
+
+    return {
+      data: foundTrack,
+      status: HttpStatus.OK,
+    };
   }
 
-  findOne(id: string) {
-    return this.tracks.findOne(id);
+  async update(
+    id: string,
+    updateTrackDto: UpdateTrackDto
+  ): Promise<RequestResult<TrackEntity>> {
+    const foundTrack = await this.prisma.track.findUnique({ where: { id } });
+
+    if (!foundTrack)
+      return {
+        data: null,
+        status: HttpStatus.NOT_FOUND,
+        error: DBMessages.TrackNotFound,
+      };
+
+    const updatedTrack = await this.prisma.track.update({
+      where: { id },
+      data: updateTrackDto,
+    });
+
+    return {
+      data: updatedTrack,
+      status: HttpStatus.OK,
+    };
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto) {
-    return this.tracks.update(id, updateTrackDto);
+  async remove(id: string): Promise<RequestResult<TrackEntity>> {
+    // await this.favoritesService.removeTrack(id);
+
+    const foundTrack = await this.prisma.track.findUnique({ where: { id } });
+
+    if (!foundTrack)
+      return {
+        data: null,
+        status: HttpStatus.NOT_FOUND,
+        error: DBMessages.TrackNotFound,
+      };
+
+    await this.prisma.track.delete({ where: { id } });
+
+    return {
+      data: null,
+      status: HttpStatus.NO_CONTENT,
+    };
   }
 
-  async remove(id: string) {
-    await this.favoritesService.removeTrack(id);
+  // removeArtistId(artistId: string) {
+  //   return this.tracks.removeArtistId(artistId);
+  // }
 
-    return this.tracks.remove(id);
-  }
-
-  removeArtistId(artistId: string) {
-    return this.tracks.removeArtistId(artistId);
-  }
-
-  removeAlbumId(albumId: string) {
-    return this.tracks.removeAlbumId(albumId);
-  }
+  // removeAlbumId(albumId: string) {
+  //   return this.tracks.removeAlbumId(albumId);
+  // }
 }
