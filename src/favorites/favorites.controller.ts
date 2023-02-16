@@ -30,13 +30,13 @@ import { FavoritesService } from './favorites.service';
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
-  // @Get()
-  // @ApiOperation({ summary: FavApiText.getSum, description: FavApiText.getDesc })
-  // @ApiOkResponse({ description: FavApiText.Ok, type: [FavoriteEntity] })
-  // @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
-  // findAll() {
-  //   return this.favoritesService.findAll();
-  // }
+  @Get()
+  @ApiOperation({ summary: FavApiText.getSum, description: FavApiText.getDesc })
+  @ApiOkResponse({ description: FavApiText.Ok, type: [FavoriteEntity] })
+  @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
+  findAll() {
+    return this.favoritesService.findAll();
+  }
 
   @Post('artist/:id')
   @ApiOperation({ summary: FavApiText.artAddSum, description: FavApiText.artAddDesc })
@@ -68,36 +68,36 @@ export class FavoritesController {
     return this.favoritesService.addEntity(id, DBEntities.Album);
   }
 
-  // @Delete('artist/:id')
-  // @HttpCode(204)
-  // @ApiOperation({ summary: FavApiText.artDelSum, description: FavApiText.artDelDesc })
-  // @ApiNoContentResponse({ description: FavApiText.delOk })
-  // @ApiBadRequestResponse({ description: FavApiText.artBadRequest })
-  // @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
-  // @ApiNotFoundResponse({ description: FavApiText.artNotFound })
-  // removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
-  //   return this.favoritesService.removeArtist(id);
-  // }
+  @Delete('artist/:id')
+  @HttpCode(204)
+  @ApiOperation({ summary: FavApiText.artDelSum, description: FavApiText.artDelDesc })
+  @ApiNoContentResponse({ description: FavApiText.delOk })
+  @ApiBadRequestResponse({ description: FavApiText.artBadRequest })
+  @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
+  @ApiNotFoundResponse({ description: FavApiText.artNotFound })
+  removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.favoritesService.removeEntity(id, DBEntities.Artist);
+  }
 
-  // @Delete('track/:id')
-  // @HttpCode(204)
-  // @ApiOperation({ summary: FavApiText.trDelSum, description: FavApiText.trDelDesc })
-  // @ApiNoContentResponse({ description: FavApiText.delOk })
-  // @ApiBadRequestResponse({ description: FavApiText.trBadRequest })
-  // @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
-  // @ApiNotFoundResponse({ description: FavApiText.trNotFound })
-  // removeTrack(@Param('id', new ParseUUIDPipe()) id: string) {
-  //   return this.favoritesService.removeTrack(id);
-  // }
+  @Delete('track/:id')
+  @HttpCode(204)
+  @ApiOperation({ summary: FavApiText.trDelSum, description: FavApiText.trDelDesc })
+  @ApiNoContentResponse({ description: FavApiText.delOk })
+  @ApiBadRequestResponse({ description: FavApiText.trBadRequest })
+  @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
+  @ApiNotFoundResponse({ description: FavApiText.trNotFound })
+  removeTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.favoritesService.removeEntity(id, DBEntities.Track);
+  }
 
-  // @Delete('album/:id')
-  // @HttpCode(204)
-  // @ApiOperation({ summary: FavApiText.albDelSum, description: FavApiText.albDelDesc })
-  // @ApiNoContentResponse({ description: FavApiText.delOk })
-  // @ApiBadRequestResponse({ description: FavApiText.albBadRequest })
-  // @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
-  // @ApiNotFoundResponse({ description: FavApiText.albNotFound })
-  // removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
-  //   return this.favoritesService.removeAlbum(id);
-  // }
+  @Delete('album/:id')
+  @HttpCode(204)
+  @ApiOperation({ summary: FavApiText.albDelSum, description: FavApiText.albDelDesc })
+  @ApiNoContentResponse({ description: FavApiText.delOk })
+  @ApiBadRequestResponse({ description: FavApiText.albBadRequest })
+  @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
+  @ApiNotFoundResponse({ description: FavApiText.albNotFound })
+  removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.favoritesService.removeEntity(id, DBEntities.Album);
+  }
 }

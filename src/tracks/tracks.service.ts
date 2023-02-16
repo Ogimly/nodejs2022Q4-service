@@ -6,17 +6,24 @@ import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { TrackEntity } from './entities/track.entity';
 
+type TrackPrisma = InstanceType<typeof TrackEntity> & {
+  favoritesId: string;
+};
+
 @Injectable()
 export class TracksService {
   constructor(private prisma: PrismaService) {}
 
+  transform({ favoritesId, ...track }: TrackPrisma): TrackEntity {
+    return { ...track };
+  }
   async create(createTrackDto: CreateTrackDto): Promise<RequestResult<TrackEntity>> {
     const newTrack = await this.prisma.track.create({
       data: createTrackDto,
     });
 
     return {
-      data: newTrack,
+      data: this.transform(newTrack),
       status: HttpStatus.CREATED,
     };
   }
@@ -24,7 +31,7 @@ export class TracksService {
   async findAll(): Promise<RequestResult<TrackEntity[]>> {
     const tracks = await this.prisma.track.findMany();
     return {
-      data: tracks,
+      data: tracks.map((track) => this.transform(track)),
       status: HttpStatus.OK,
     };
   }
@@ -40,7 +47,7 @@ export class TracksService {
       };
 
     return {
-      data: foundTrack,
+      data: this.transform(foundTrack),
       status: HttpStatus.OK,
     };
   }
@@ -64,7 +71,7 @@ export class TracksService {
     });
 
     return {
-      data: updatedTrack,
+      data: this.transform(updatedTrack),
       status: HttpStatus.OK,
     };
   }

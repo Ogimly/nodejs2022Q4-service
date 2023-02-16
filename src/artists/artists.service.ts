@@ -6,9 +6,17 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistEntity } from './entities/artist.entity';
 
+type ArtistPrisma = InstanceType<typeof ArtistEntity> & {
+  favoritesId: string;
+};
+
 @Injectable()
 export class ArtistsService {
   constructor(private prisma: PrismaService) {}
+
+  transform({ favoritesId, ...artist }: ArtistPrisma): ArtistEntity {
+    return { ...artist };
+  }
 
   async create(createArtistDto: CreateArtistDto): Promise<RequestResult<ArtistEntity>> {
     const newArtist = await this.prisma.artist.create({
@@ -16,7 +24,7 @@ export class ArtistsService {
     });
 
     return {
-      data: newArtist,
+      data: this.transform(newArtist),
       status: HttpStatus.CREATED,
     };
   }
@@ -25,7 +33,7 @@ export class ArtistsService {
     // return this.prisma.artist.findAll(ids);
     const artists = await this.prisma.artist.findMany();
     return {
-      data: artists,
+      data: artists.map((artist) => this.transform(artist)),
       status: HttpStatus.OK,
     };
   }
@@ -41,7 +49,7 @@ export class ArtistsService {
       };
 
     return {
-      data: foundArtist,
+      data: this.transform(foundArtist),
       status: HttpStatus.OK,
     };
   }
@@ -65,7 +73,7 @@ export class ArtistsService {
     });
 
     return {
-      data: updatedArtist,
+      data: this.transform(updatedArtist),
       status: HttpStatus.OK,
     };
   }

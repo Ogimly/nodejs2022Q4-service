@@ -26,6 +26,7 @@ export const enum DBMessages {
 
   EntityNotFound = 'not found',
   EntityAdded = 'added successfully',
+  EntityNotInFavorites = 'not in favorites',
 }
 
 export const enum UserApiText {

@@ -6,9 +6,17 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { AlbumEntity } from './entities/album.entity';
 
+type AlbumPrisma = InstanceType<typeof AlbumEntity> & {
+  favoritesId: string;
+};
+
 @Injectable()
 export class AlbumsService {
   constructor(private prisma: PrismaService) {}
+
+  transform({ favoritesId, ...album }: AlbumPrisma): AlbumEntity {
+    return { ...album };
+  }
 
   async create(createAlbumDto: CreateAlbumDto): Promise<RequestResult<AlbumEntity>> {
     const newAlbum = await this.prisma.album.create({
@@ -16,7 +24,7 @@ export class AlbumsService {
     });
 
     return {
-      data: newAlbum,
+      data: this.transform(newAlbum),
       status: HttpStatus.CREATED,
     };
   }
@@ -24,7 +32,7 @@ export class AlbumsService {
   async findAll(): Promise<RequestResult<AlbumEntity[]>> {
     const albums = await this.prisma.album.findMany();
     return {
-      data: albums,
+      data: albums.map((album) => this.transform(album)),
       status: HttpStatus.OK,
     };
   }
@@ -40,7 +48,7 @@ export class AlbumsService {
       };
 
     return {
-      data: foundAlbum,
+      data: this.transform(foundAlbum),
       status: HttpStatus.OK,
     };
   }
@@ -64,7 +72,7 @@ export class AlbumsService {
     });
 
     return {
-      data: updatedAlbum,
+      data: this.transform(updatedAlbum),
       status: HttpStatus.OK,
     };
   }

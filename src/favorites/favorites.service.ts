@@ -7,24 +7,19 @@ import { PrismaService } from '../common/prisma/prisma.service';
 export class FavoritesService {
   constructor(private prisma: PrismaService) {}
 
-  // async findAll(): Promise<RequestResult<FavoritesResponse>> {
-  //   const artistIds = (await this.favorites.findAllArtist()).data;
-  //   const trackIds = (await this.favorites.findAllTracks()).data;
-  //   const albumIds = (await this.favorites.findAllAlbums()).data;
-  //   return {
-  //     data: {
-  //       artists:
-  //         artistIds.length === 0
-  //           ? []
-  //           : (await this.artistsService.findAll(artistIds)).data,
-  //       tracks:
-  //         trackIds.length === 0 ? [] : (await this.tracksService.findAll(trackIds)).data,
-  //       albums:
-  //         albumIds.length === 0 ? [] : (await this.albumsService.findAll(albumIds)).data,
-  //     },
-  //     status: HttpStatus.OK,
-  //   };
-  // }
+  async findAll(): Promise<RequestResult<FavoritesResponse>> {
+    // const artistIds = (await this.favorites.findAllArtist()).data;
+    // const trackIds = (await this.favorites.findAllTracks()).data;
+    // const albumIds = (await this.favorites.findAllAlbums()).data;
+    return {
+      data: {
+        artists: [],
+        tracks: [],
+        albums: [],
+      },
+      status: HttpStatus.OK,
+    };
+  }
 
   async addEntity(
     EntityId: string,
@@ -62,27 +57,34 @@ export class FavoritesService {
     };
   }
 
-  // async removeArtist(ArtistId: string) {
-  //   const res = await this.artistsService.findOne(ArtistId);
+  async removeEntity(EntityId: string, nameEntity: DBEntities) {
+    const namePrisma = nameEntity.toLocaleLowerCase();
+    const res = await this.prisma[namePrisma].findUnique({ where: { id: EntityId } });
 
-  //   if (res.error) return res;
+    if (!res) {
+      return {
+        data: null,
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        error: `${nameEntity} ${DBMessages.EntityNotFound}`,
+      };
+    }
 
-  //   return this.favorites.removeArtist(ArtistId);
-  // }
+    if (res.favoritesId === null) {
+      return {
+        data: null,
+        status: HttpStatus.NOT_FOUND,
+        error: `${nameEntity} ${DBMessages.EntityNotInFavorites}`,
+      };
+    }
 
-  // async removeTrack(trackId: string) {
-  //   const res = await this.tracksService.findOne(trackId);
+    await this.prisma[namePrisma].update({
+      where: { id: EntityId },
+      data: { favoritesId: null },
+    });
 
-  //   if (res.error) return res;
-
-  //   return this.favorites.removeTrack(trackId);
-  // }
-
-  // async removeAlbum(albumId: string) {
-  //   const res = await this.albumsService.findOne(albumId);
-
-  //   if (res.error) return res;
-
-  //   return this.favorites.removeAlbum(albumId);
-  // }
+    return {
+      data: null,
+      status: HttpStatus.NO_CONTENT,
+    };
+  }
 }
