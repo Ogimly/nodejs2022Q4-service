@@ -8,15 +8,35 @@ export class FavoritesService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(): Promise<RequestResult<FavoritesResponse>> {
-    // const artistIds = (await this.favorites.findAllArtist()).data;
-    // const trackIds = (await this.favorites.findAllTracks()).data;
-    // const albumIds = (await this.favorites.findAllAlbums()).data;
-    return {
-      data: {
-        artists: [],
-        tracks: [],
-        albums: [],
+    const res = await this.prisma.favorites.findMany({
+      select: {
+        artists: {
+          select: { id: true, name: true, grammy: true },
+        },
+        tracks: {
+          select: {
+            id: true,
+            name: true,
+            duration: true,
+            artistId: true,
+            albumId: true,
+          },
+        },
+        albums: {
+          select: { id: true, name: true, year: true, artistId: true },
+        },
       },
+    });
+
+    return {
+      data:
+        res.length === 0
+          ? {
+              artists: [],
+              tracks: [],
+              albums: [],
+            }
+          : res[0],
       status: HttpStatus.OK,
     };
   }
