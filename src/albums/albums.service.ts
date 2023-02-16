@@ -2,26 +2,12 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { DBMessages } from '../common/enums';
 import { RequestResult } from '../common/interfaces';
 import { PrismaService } from '../common/prisma/prisma.service';
-// import { AlbumsRepository } from '../common/DB/albums-db';
-// import { FavoritesService } from '../favorites/favorites.service';
-// import { TracksService } from '../tracks/tracks.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { AlbumEntity } from './entities/album.entity';
 
 @Injectable()
 export class AlbumsService {
-  // private albums: AlbumsRepository;
-
-  // constructor(
-  //   @Inject(forwardRef(() => TracksService))
-  //   private tracksService: TracksService,
-
-  //   @Inject(forwardRef(() => FavoritesService))
-  //   private favoritesService: FavoritesService
-  // ) {
-  //   this.albums = new AlbumsRepository();
-  // }
   constructor(private prisma: PrismaService) {}
 
   async create(createAlbumDto: CreateAlbumDto): Promise<RequestResult<AlbumEntity>> {
@@ -35,7 +21,7 @@ export class AlbumsService {
     };
   }
 
-  async findAll(ids: string[] = []): Promise<RequestResult<AlbumEntity[]>> {
+  async findAll(): Promise<RequestResult<AlbumEntity[]>> {
     const albums = await this.prisma.album.findMany();
     return {
       data: albums,
@@ -100,8 +86,4 @@ export class AlbumsService {
       status: HttpStatus.NO_CONTENT,
     };
   }
-
-  // removeArtistId(artistId: string) {
-  //   return this.albums.removeArtistId(artistId);
-  // }
 }

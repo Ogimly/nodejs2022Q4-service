@@ -23,17 +23,6 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<RequestResult<TransformedUser>> {
-    // const userExists = await this.prisma.user.findFirst({
-    //   where: { login: createUserDto.login },
-    // });
-
-    // if (userExists)
-    //   return {
-    //     data: null,
-    //     status: HttpStatus.CONFLICT,
-    //     error: DBMessages.UserExists,
-    //   };
-
     const newUser = await this.prisma.user.create({
       data: createUserDto,
     });

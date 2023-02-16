@@ -1,3 +1,9 @@
+export const enum DBEntities {
+  Artist = 'Artist',
+  Album = 'Album',
+  Track = 'Track',
+}
+
 export const enum DBMessages {
   UserNotFound = 'User not found',
   UserPasswordInvalid = 'Invalid user password',
@@ -17,6 +23,9 @@ export const enum DBMessages {
   AlbumAdded = 'Album added successfully',
   AlbumRemoved = 'Album removed successfully',
   AlbumNotInFavorites = 'Album not in favorites',
+
+  EntityNotFound = 'not found',
+  EntityAdded = 'added successfully',
 }
 
 export const enum UserApiText {

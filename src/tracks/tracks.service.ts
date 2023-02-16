@@ -2,22 +2,12 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { DBMessages } from '../common/enums';
 import { RequestResult } from '../common/interfaces';
 import { PrismaService } from '../common/prisma/prisma.service';
-// import { TracksRepository } from '../common/DB/tracks-db';
-// import { FavoritesService } from '../favorites/favorites.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { TrackEntity } from './entities/track.entity';
 
 @Injectable()
 export class TracksService {
-  // private tracks: TracksRepository;
-
-  // constructor(
-  //   @Inject(forwardRef(() => FavoritesService))
-  //   private favoritesService: FavoritesService
-  // ) {
-  //   this.tracks = new TracksRepository();
-  // }
   constructor(private prisma: PrismaService) {}
 
   async create(createTrackDto: CreateTrackDto): Promise<RequestResult<TrackEntity>> {
@@ -31,8 +21,7 @@ export class TracksService {
     };
   }
 
-  async findAll(ids: string[] = []): Promise<RequestResult<TrackEntity[]>> {
-    // return this.tracks.findAll(ids);
+  async findAll(): Promise<RequestResult<TrackEntity[]>> {
     const tracks = await this.prisma.track.findMany();
     return {
       data: tracks,
@@ -81,8 +70,6 @@ export class TracksService {
   }
 
   async remove(id: string): Promise<RequestResult<TrackEntity>> {
-    // await this.favoritesService.removeTrack(id);
-
     const foundTrack = await this.prisma.track.findUnique({ where: { id } });
 
     if (!foundTrack)
@@ -99,12 +86,4 @@ export class TracksService {
       status: HttpStatus.NO_CONTENT,
     };
   }
-
-  // removeArtistId(artistId: string) {
-  //   return this.tracks.removeArtistId(artistId);
-  // }
-
-  // removeAlbumId(albumId: string) {
-  //   return this.tracks.removeAlbumId(albumId);
-  // }
 }
