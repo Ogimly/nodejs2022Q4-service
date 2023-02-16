@@ -5,7 +5,7 @@ services:
     image: db-home-library
     container_name: db
     build: ./db
-    restart: unless-stopped
+    restart: always
     env_file:
       - .env
     ports:
@@ -20,7 +20,7 @@ services:
     image: app-home-library
     container_name: app
     build: ./
-    restart: unless-stopped
+    restart: always
     env_file:
       - .env
     ports:
