@@ -8,10 +8,12 @@ import { DEFAULT_PORT } from './common/consts';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const port = process.env.PORT ?? DEFAULT_PORT;
+
   const config = new DocumentBuilder()
     .setTitle('Home Library Service')
     .setDescription('Home music library service API description')
-    .addServer('http://localhost:4000/')
+    .addServer(`http://localhost:${port}/`)
     .addTag('Users')
     .addTag('Artists')
     .addTag('Albums')
@@ -26,6 +28,6 @@ async function bootstrap() {
 
   app.enableCors();
 
-  await app.listen(process.env.PORT ?? DEFAULT_PORT);
+  await app.listen(port);
 }
 bootstrap();

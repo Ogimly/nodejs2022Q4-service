@@ -1,56 +1,43 @@
-# version: '3.9'
-
-# services:
-#   database:
-#     image: db-home-library
-#     container_name: database
-#     build: ./db
-#     restart: unless-stopped
-#     env_file:
-#       - .env
-#     ports:
-#       - '${POSTGRES_PORT}:${POSTGRES_PORT}'
-#     volumes:
-#       - data:/var/lib/postgresql/data
-#       - logs:/var/lib/postgresql/logs
-#     networks:
-#       - net
-
-#   app:
-#     image: app-home-library
-#     container_name: app
-#     build: ./
-#     restart: unless-stopped
-#     env_file:
-#       - .env
-#     ports:
-#       - ${PORT}:${PORT}
-#     volumes:
-#       - .:/usr/app/
-#       - node-modules:/usr/app/node_modules
-#     depends_on:
-#       - database
-#     networks:
-#       - net
-
-# volumes:
-#   logs:
-#   data:
-#   node-modules:
-
-# networks:
-#   net:
-#     driver: bridge
-
 version: '3.9'
 
 services:
   database:
     image: db-home-library
-    container_name: database
+    container_name: db
     build: ./db
     restart: unless-stopped
     env_file:
       - .env
     ports:
       - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    volumes:
+      - data:/var/lib/postgresql/data
+      - logs:/var/lib/postgresql/logs
+    networks:
+      - net
+
+  app:
+    image: app-home-library
+    container_name: app
+    build: ./
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - .:/usr/app/
+      - node-modules:/usr/app/node_modules
+    depends_on:
+      - database
+    networks:
+      - net
+
+volumes:
+  logs:
+  data:
+  node-modules:
+
+networks:
+  net:
+    driver: bridge

@@ -5,6 +5,11 @@ db
 Dockerfile
 .git
 
+.dockerignore
+.gitignore
+Dockerfile
+docker-compose.yml
+
 # Logs
 logs
 *.log

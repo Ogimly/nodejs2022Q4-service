@@ -17,18 +17,20 @@ git clone https://github.com/Ogimly/nodejs2022Q4-service.git
 npm install
 ```
 
-## Running application
+## Environment
+
+Create `.env` file using `.env.example` as a pattern.
+
+You can change default port (4000 as default) and db properties.
+
+## Running application in Docker container
 
 ```
-npm start
+docker-compose up
 ```
 
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/api/.
-
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
-
-You can change default port in .env (see .env.example)
 
 ## Testing
 
