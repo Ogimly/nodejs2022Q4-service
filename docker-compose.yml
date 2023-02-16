@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   database:
-    image: db-home-library
+    image: ogimly/home-library:db
     container_name: db
     build: ./db
     restart: always
@@ -17,7 +17,7 @@ services:
       - net
 
   app:
-    image: app-home-library
+    image: ogimly/home-library:app
     container_name: app
     build: ./
     restart: always
