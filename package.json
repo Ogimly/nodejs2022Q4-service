@@ -22,7 +22,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "start:nodemon": "nodemon --exitcrash -L src/main.ts",
     "start:prisma": "npx prisma generate && npx prisma migrate dev && nodemon --exitcrash -L src/main.ts",
-    "docker:scan": "docker scan app-home-library && docker scan db-home-library"
+    "docker:start": "docker-compose up",
+    "docker:scan": "docker scan ogimly/home-library:app && docker scan ogimly/home-library:db"
   },
   "dependencies": {
     "@nestjs/common": "^9.3.2",
