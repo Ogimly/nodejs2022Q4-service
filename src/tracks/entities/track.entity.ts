@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Track } from '@prisma/client';
 
 export class TrackEntity {
   @ApiProperty({ description: 'uuid v4', format: 'uuid' })
@@ -16,7 +17,11 @@ export class TrackEntity {
   @ApiProperty({ description: 'track duration', example: 262 })
   duration: number;
 
-  constructor(partial: Partial<TrackEntity>) {
-    Object.assign(this, partial);
+  constructor(track: Track) {
+    this.id = track.id;
+    this.name = track.name;
+    this.artistId = track.artistId;
+    this.albumId = track.albumId;
+    this.duration = track.duration;
   }
 }

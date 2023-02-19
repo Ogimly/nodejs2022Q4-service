@@ -20,7 +20,7 @@ import {
   ApiUnauthorizedResponse,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
-import { DBEntities, FavApiText } from '../common/enums';
+import { FavApiText } from '../common/enums';
 import { FavoriteEntity } from './entities/favorite.entity';
 import { FavoritesService } from './favorites.service';
 
@@ -45,7 +45,7 @@ export class FavoritesController {
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiUnprocessableEntityResponse({ description: FavApiText.artUnpr })
   addArtist(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.favoritesService.addEntity(id, DBEntities.Artist);
+    return this.favoritesService.addArtist(id);
   }
 
   @Post('track/:id')
@@ -55,7 +55,7 @@ export class FavoritesController {
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiUnprocessableEntityResponse({ description: FavApiText.trUnpr })
   addTrack(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.favoritesService.addEntity(id, DBEntities.Track);
+    return this.favoritesService.addTrack(id);
   }
 
   @Post('album/:id')
@@ -65,7 +65,7 @@ export class FavoritesController {
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiUnprocessableEntityResponse({ description: FavApiText.albUnpr })
   addAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.favoritesService.addEntity(id, DBEntities.Album);
+    return this.favoritesService.addAlbum(id);
   }
 
   @Delete('artist/:id')
@@ -76,7 +76,7 @@ export class FavoritesController {
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiNotFoundResponse({ description: FavApiText.artNotFound })
   removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.favoritesService.removeEntity(id, DBEntities.Artist);
+    return this.favoritesService.removeArtist(id);
   }
 
   @Delete('track/:id')
@@ -87,7 +87,7 @@ export class FavoritesController {
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiNotFoundResponse({ description: FavApiText.trNotFound })
   removeTrack(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.favoritesService.removeEntity(id, DBEntities.Track);
+    return this.favoritesService.removeTrack(id);
   }
 
   @Delete('album/:id')
@@ -98,6 +98,6 @@ export class FavoritesController {
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiNotFoundResponse({ description: FavApiText.albNotFound })
   removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.favoritesService.removeEntity(id, DBEntities.Album);
+    return this.favoritesService.removeAlbum(id);
   }
 }

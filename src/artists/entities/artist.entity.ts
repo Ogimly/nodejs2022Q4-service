@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Artist } from '@prisma/client';
 
 export class ArtistEntity {
   @ApiProperty({ description: 'uuid v4', format: 'uuid' })
@@ -10,7 +11,9 @@ export class ArtistEntity {
   @ApiProperty({ description: 'artist has Grammy', example: 'false' })
   grammy: boolean;
 
-  constructor(partial: Partial<ArtistEntity>) {
-    Object.assign(this, partial);
+  constructor(artist: Artist) {
+    this.id = artist.id;
+    this.name = artist.name;
+    this.grammy = artist.grammy;
   }
 }
