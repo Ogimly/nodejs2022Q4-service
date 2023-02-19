@@ -52,15 +52,6 @@ export class ArtistsPrismaRepository {
     id: string,
     updateArtistDto: UpdateArtistDto
   ): Promise<RequestResult<ArtistEntity>> {
-    const foundArtist = await this.prisma.artist.findUnique({ where: { id } });
-
-    if (!foundArtist)
-      return {
-        data: null,
-        status: HttpStatus.NOT_FOUND,
-        error: DBMessages.ArtistNotFound,
-      };
-
     const updatedArtist = await this.prisma.artist.update({
       where: { id },
       data: updateArtistDto,
@@ -73,20 +64,34 @@ export class ArtistsPrismaRepository {
   }
 
   public async remove(id: string): Promise<RequestResult<ArtistEntity>> {
-    const foundArtist = await this.prisma.artist.findUnique({ where: { id } });
-
-    if (!foundArtist)
-      return {
-        data: null,
-        status: HttpStatus.NOT_FOUND,
-        error: DBMessages.ArtistNotFound,
-      };
-
     await this.prisma.artist.delete({ where: { id } });
 
     return {
       data: null,
       status: HttpStatus.NO_CONTENT,
+    };
+  }
+
+  public async validate(id: string): Promise<RequestResult<boolean>> {
+    if (id === null)
+      return {
+        data: true,
+        status: HttpStatus.OK,
+      };
+
+    const foundArtist = await this.prisma.artist.findUnique({ where: { id } });
+
+    if (!foundArtist) {
+      return {
+        data: false,
+        status: HttpStatus.NOT_FOUND,
+        error: DBMessages.ArtistNotFound,
+      };
+    }
+
+    return {
+      data: true,
+      status: HttpStatus.OK,
     };
   }
 }

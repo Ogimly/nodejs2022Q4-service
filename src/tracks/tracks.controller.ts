@@ -26,6 +26,7 @@ import {
 } from '@nestjs/swagger';
 import { TrackApiText } from '../common/enums';
 import { TrackEntity } from './entities/track.entity';
+import { TrackByIdPipe } from '../common/pipes/track-by-id/track-by-id.pipe';
 
 @UsePipes(new ValidationPipe())
 @ApiTags(TrackApiText.tag)
@@ -56,8 +57,8 @@ export class TracksController {
   @ApiBadRequestResponse({ description: TrackApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
   @ApiNotFoundResponse({ description: TrackApiText.NotFound })
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.tracksService.findOne(id);
+  findOne(@Param('id', ParseUUIDPipe, TrackByIdPipe) track: TrackEntity) {
+    return track;
   }
 
   @Put(':id')
@@ -67,10 +68,10 @@ export class TracksController {
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
   @ApiNotFoundResponse({ description: TrackApiText.NotFound })
   update(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('id', ParseUUIDPipe, TrackByIdPipe) track: TrackEntity,
     @Body() updateTrackDto: UpdateTrackDto
   ) {
-    return this.tracksService.update(id, updateTrackDto);
+    return this.tracksService.update(track.id, updateTrackDto);
   }
 
   @Delete(':id')
@@ -80,7 +81,7 @@ export class TracksController {
   @ApiBadRequestResponse({ description: TrackApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
   @ApiNotFoundResponse({ description: TrackApiText.NotFound })
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.tracksService.remove(id);
+  remove(@Param('id', ParseUUIDPipe, TrackByIdPipe) track: TrackEntity) {
+    return this.tracksService.remove(track.id);
   }
 }

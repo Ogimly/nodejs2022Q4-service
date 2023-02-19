@@ -22,6 +22,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ArtistApiText } from '../common/enums';
+import { ArtistByIdPipe } from '../common/pipes/artist-by-id/artist-by-id.pipe';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
@@ -59,8 +60,8 @@ export class ArtistsController {
   @ApiBadRequestResponse({ description: ArtistApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
   @ApiNotFoundResponse({ description: ArtistApiText.NotFound })
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.artistsService.findOne(id);
+  findOne(@Param('id', ParseUUIDPipe, ArtistByIdPipe) artist: ArtistEntity) {
+    return artist;
   }
 
   @Put(':id')
@@ -70,10 +71,10 @@ export class ArtistsController {
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
   @ApiNotFoundResponse({ description: ArtistApiText.NotFound })
   update(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('id', ParseUUIDPipe, ArtistByIdPipe) artist: ArtistEntity,
     @Body() updateArtistDto: UpdateArtistDto
   ) {
-    return this.artistsService.update(id, updateArtistDto);
+    return this.artistsService.update(artist.id, updateArtistDto);
   }
 
   @Delete(':id')
@@ -83,7 +84,7 @@ export class ArtistsController {
   @ApiBadRequestResponse({ description: ArtistApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
   @ApiNotFoundResponse({ description: ArtistApiText.NotFound })
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.artistsService.remove(id);
+  remove(@Param('id', ParseUUIDPipe, ArtistByIdPipe) artist: ArtistEntity) {
+    return this.artistsService.remove(artist.id);
   }
 }

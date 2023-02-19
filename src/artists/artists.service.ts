@@ -31,4 +31,8 @@ export class ArtistsService {
   remove(id: string) {
     return this.artists.remove(id);
   }
+
+  validate(id: string) {
+    return this.artists.validate(id);
+  }
 }

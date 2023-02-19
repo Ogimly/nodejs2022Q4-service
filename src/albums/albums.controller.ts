@@ -22,6 +22,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AlbumApiText } from '../common/enums';
+import { AlbumByIdPipe } from '../common/pipes/album-by-id/album-by-id.pipe';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -56,10 +57,9 @@ export class AlbumsController {
   @ApiBadRequestResponse({ description: AlbumApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
   @ApiNotFoundResponse({ description: AlbumApiText.NotFound })
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.albumsService.findOne(id);
+  findOne(@Param('id', ParseUUIDPipe, AlbumByIdPipe) album: AlbumEntity) {
+    return album;
   }
-
   @Put(':id')
   @ApiOperation({ summary: AlbumApiText.putSum, description: AlbumApiText.putDesc })
   @ApiOkResponse({ description: AlbumApiText.putOk, type: UpdateAlbumDto })
@@ -67,10 +67,10 @@ export class AlbumsController {
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
   @ApiNotFoundResponse({ description: AlbumApiText.NotFound })
   update(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('id', ParseUUIDPipe, AlbumByIdPipe) album: AlbumEntity,
     @Body() updateAlbumDto: UpdateAlbumDto
   ) {
-    return this.albumsService.update(id, updateAlbumDto);
+    return this.albumsService.update(album.id, updateAlbumDto);
   }
 
   @Delete(':id')
@@ -80,7 +80,7 @@ export class AlbumsController {
   @ApiBadRequestResponse({ description: AlbumApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
   @ApiNotFoundResponse({ description: AlbumApiText.NotFound })
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.albumsService.remove(id);
+  remove(@Param('id', ParseUUIDPipe, AlbumByIdPipe) album: AlbumEntity) {
+    return this.albumsService.remove(album.id);
   }
 }

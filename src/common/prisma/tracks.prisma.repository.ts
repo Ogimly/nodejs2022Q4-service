@@ -5,9 +5,15 @@ import { TrackEntity } from '../../tracks/entities/track.entity';
 import { CreateTrackDto } from '../../tracks/dto/create-track.dto';
 import { UpdateTrackDto } from '../../tracks/dto/update-track.dto';
 import { PrismaService } from './prisma.service';
+import { ArtistsService } from '../../artists/artists.service';
+import { AlbumsService } from '../../albums/albums.service';
 
 export class TracksPrismaRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly artistService: ArtistsService,
+    private readonly albumService: AlbumsService
+  ) {}
 
   public async create(
     createTrackDto: CreateTrackDto
@@ -46,18 +52,24 @@ export class TracksPrismaRepository {
       status: HttpStatus.OK,
     };
   }
-
   public async update(
     id: string,
     updateTrackDto: UpdateTrackDto
   ): Promise<RequestResult<TrackEntity>> {
-    const foundTrack = await this.prisma.track.findUnique({ where: { id } });
-
-    if (!foundTrack)
+    const artistValid = await this.artistService.validate(updateTrackDto.artistId);
+    if (artistValid.error)
       return {
         data: null,
-        status: HttpStatus.NOT_FOUND,
-        error: DBMessages.TrackNotFound,
+        status: HttpStatus.BAD_REQUEST,
+        error: DBMessages.ArtistNotFound,
+      };
+
+    const albumValid = await this.albumService.validate(updateTrackDto.albumId);
+    if (albumValid.error)
+      return {
+        data: null,
+        status: HttpStatus.BAD_REQUEST,
+        error: DBMessages.AlbumNotFound,
       };
 
     const updatedTrack = await this.prisma.track.update({
@@ -72,15 +84,6 @@ export class TracksPrismaRepository {
   }
 
   public async remove(id: string): Promise<RequestResult<TrackEntity>> {
-    const foundTrack = await this.prisma.track.findUnique({ where: { id } });
-
-    if (!foundTrack)
-      return {
-        data: null,
-        status: HttpStatus.NOT_FOUND,
-        error: DBMessages.TrackNotFound,
-      };
-
     await this.prisma.track.delete({ where: { id } });
 
     return {
