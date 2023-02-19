@@ -23,6 +23,7 @@ import {
 } from '@nestjs/swagger';
 import { AlbumApiText } from '../common/enums';
 import { AlbumByIdPipe } from '../common/pipes/album-by-id/album-by-id.pipe';
+import { ValidateArtistIdPipe } from '../common/pipes/validate-artist-id/validate-artist-id.pipe';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -47,7 +48,7 @@ export class AlbumsController {
   @ApiCreatedResponse({ description: AlbumApiText.Ok, type: AlbumEntity })
   @ApiBadRequestResponse({ description: AlbumApiText.createBadRequest })
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
-  create(@Body() createAlbumDto: CreateAlbumDto) {
+  create(@Body(ValidateArtistIdPipe) createAlbumDto: CreateAlbumDto) {
     return this.albumsService.create(createAlbumDto);
   }
 
@@ -68,7 +69,7 @@ export class AlbumsController {
   @ApiNotFoundResponse({ description: AlbumApiText.NotFound })
   update(
     @Param('id', ParseUUIDPipe, AlbumByIdPipe) album: AlbumEntity,
-    @Body() updateAlbumDto: UpdateAlbumDto
+    @Body(ValidateArtistIdPipe) updateAlbumDto: UpdateAlbumDto
   ) {
     return this.albumsService.update(album.id, updateAlbumDto);
   }

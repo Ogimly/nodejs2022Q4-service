@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { AlbumsService } from '../albums/albums.service';
-import { ArtistsService } from '../artists/artists.service';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { TracksPrismaRepository } from '../common/prisma/tracks.prisma.repository';
 import { CreateTrackDto } from './dto/create-track.dto';
@@ -10,12 +8,8 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 export class TracksService {
   private tracks: TracksPrismaRepository;
 
-  constructor(
-    private prisma: PrismaService,
-    private readonly artistService: ArtistsService,
-    private readonly albumService: AlbumsService
-  ) {
-    this.tracks = new TracksPrismaRepository(prisma, artistService, albumService);
+  constructor(private prisma: PrismaService) {
+    this.tracks = new TracksPrismaRepository(prisma);
   }
 
   create(createTrackDto: CreateTrackDto) {
@@ -29,6 +23,7 @@ export class TracksService {
   findOne(id: string) {
     return this.tracks.findOne(id);
   }
+
   update(id: string, updateTrackDto: UpdateTrackDto) {
     return this.tracks.update(id, updateTrackDto);
   }

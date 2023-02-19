@@ -5,13 +5,9 @@ import { AlbumEntity } from '../../albums/entities/album.entity';
 import { CreateAlbumDto } from '../../albums/dto/create-album.dto';
 import { UpdateAlbumDto } from '../../albums/dto/update-album.dto';
 import { PrismaService } from './prisma.service';
-import { ArtistsService } from '../../artists/artists.service';
 
 export class AlbumsPrismaRepository {
-  constructor(
-    private prisma: PrismaService,
-    private readonly artistService: ArtistsService
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   public async create(
     createAlbumDto: CreateAlbumDto
@@ -55,14 +51,6 @@ export class AlbumsPrismaRepository {
     id: string,
     updateAlbumDto: UpdateAlbumDto
   ): Promise<RequestResult<AlbumEntity>> {
-    const artistValid = await this.artistService.validate(updateAlbumDto.artistId);
-    if (artistValid.error)
-      return {
-        data: null,
-        status: HttpStatus.BAD_REQUEST,
-        error: DBMessages.ArtistNotFound,
-      };
-
     const updatedAlbum = await this.prisma.album.update({
       where: { id },
       data: updateAlbumDto,

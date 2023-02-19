@@ -27,6 +27,8 @@ import {
 import { TrackApiText } from '../common/enums';
 import { TrackEntity } from './entities/track.entity';
 import { TrackByIdPipe } from '../common/pipes/track-by-id/track-by-id.pipe';
+import { ValidateArtistIdPipe } from '../common/pipes/validate-artist-id/validate-artist-id.pipe';
+import { ValidateAlbumIdPipe } from '../common/pipes/validate-album-id/validate-album-id.pipe';
 
 @UsePipes(new ValidationPipe())
 @ApiTags(TrackApiText.tag)
@@ -47,7 +49,9 @@ export class TracksController {
   @ApiCreatedResponse({ description: TrackApiText.Ok, type: TrackEntity })
   @ApiBadRequestResponse({ description: TrackApiText.createBadRequest })
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
-  create(@Body() createTrackDto: CreateTrackDto) {
+  create(
+    @Body(ValidateArtistIdPipe, ValidateAlbumIdPipe) createTrackDto: CreateTrackDto
+  ) {
     return this.tracksService.create(createTrackDto);
   }
 
@@ -69,7 +73,7 @@ export class TracksController {
   @ApiNotFoundResponse({ description: TrackApiText.NotFound })
   update(
     @Param('id', ParseUUIDPipe, TrackByIdPipe) track: TrackEntity,
-    @Body() updateTrackDto: UpdateTrackDto
+    @Body(ValidateArtistIdPipe, ValidateAlbumIdPipe) updateTrackDto: UpdateTrackDto
   ) {
     return this.tracksService.update(track.id, updateTrackDto);
   }
