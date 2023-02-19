@@ -28,7 +28,7 @@ export class ArtistsService {
     return this.artists.update(id, updateArtistDto);
   }
 
-  async remove(id: string) {
+  remove(id: string) {
     return this.artists.remove(id);
   }
 }
