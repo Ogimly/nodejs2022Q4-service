@@ -10,34 +10,34 @@ services:
       - .env
     ports:
       - '${POSTGRES_PORT}:${POSTGRES_PORT}'
-    volumes:
-      - data:/var/lib/postgresql/data
-      - logs:/var/lib/postgresql/logs
-    networks:
-      - net
+#     volumes:
+#       - data:/var/lib/postgresql/data
+#       - logs:/var/lib/postgresql/logs
+#     networks:
+#       - net
 
-  app:
-    image: ogimly/home-library:app
-    container_name: app
-    build: ./
-    restart: always
-    env_file:
-      - .env
-    ports:
-      - ${PORT}:${PORT}
-    volumes:
-      - .:/usr/app/
-      - node-modules:/usr/app/node_modules
-    depends_on:
-      - database
-    networks:
-      - net
+#   app:
+#     image: ogimly/home-library:app
+#     container_name: app
+#     build: ./
+#     restart: always
+#     env_file:
+#       - .env
+#     ports:
+#       - ${PORT}:${PORT}
+#     volumes:
+#       - .:/usr/app/
+#       - node-modules:/usr/app/node_modules
+#     depends_on:
+#       - database
+#     networks:
+#       - net
 
-volumes:
-  logs:
-  data:
-  node-modules:
+# volumes:
+#   logs:
+#   data:
+#   node-modules:
 
-networks:
-  net:
-    driver: bridge
+# networks:
+#   net:
+#     driver: bridge

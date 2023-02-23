@@ -3,12 +3,17 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { DEFAULT_PORT } from './common/consts';
+import { DEFAULT_LOG_LEVEL, DEFAULT_PORT } from './common/consts';
+import { AppLoggerService } from './app-logger/app-logger.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
+  const logLevel = Number(process.env.LOG_LEVEL) ?? DEFAULT_LOG_LEVEL;
   const port = process.env.PORT ?? DEFAULT_PORT;
+
+  // const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: new AppLoggerService(logLevel),
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Home Library Service')

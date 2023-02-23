@@ -177,3 +177,22 @@ export const enum FavApiText {
   albDelSum = 'Delete album from favorites',
   albDelDesc = 'Delete album from favorites',
 }
+
+export const enum ConsoleColors {
+  Reset = '\x1b[0m',
+  Green = '\x1b[32m',
+  Yellow = '\x1b[33m',
+  Red = '\x1b[31m',
+  Blue = '\x1b[34m',
+  Cyan = '\x1b[36m',
+  Magenta = '\x1b[35m',
+  White = '\x1b[37m',
+}
+
+export const enum LogLevels {
+  log = '    LOG',
+  error = '  ERROR',
+  warn = '   WARN',
+  debug = '  DEBUG',
+  verbose = 'VERBOSE',
+}
