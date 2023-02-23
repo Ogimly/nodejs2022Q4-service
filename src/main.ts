@@ -11,9 +11,10 @@ async function bootstrap() {
   const port = process.env.PORT ?? DEFAULT_PORT;
 
   // const app = await NestFactory.create(AppModule);
-  const app = await NestFactory.create(AppModule, {
-    logger: new AppLoggerService(logLevel),
-  });
+  const logger = new AppLoggerService(logLevel);
+  await logger.initLogs();
+
+  const app = await NestFactory.create(AppModule, { logger });
 
   const config = new DocumentBuilder()
     .setTitle('Home Library Service')
