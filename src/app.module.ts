@@ -11,6 +11,7 @@ import { ErrorInterceptor } from './common/error/error.interceptor';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { AppExceptionsFilter } from './common/app-exceptions/app-exceptions.filter';
 import { LoggerMiddleware } from './common/app-logger/logger/logger.middleware';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { LoggerMiddleware } from './common/app-logger/logger/logger.middleware';
     TracksModule,
     FavoritesModule,
     PrismaModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
