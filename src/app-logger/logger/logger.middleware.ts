@@ -1,6 +1,6 @@
 import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { RequestLog } from '../../common/interfaces';
+import { MessageLog } from '../../common/interfaces';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
@@ -12,7 +12,7 @@ export class LoggerMiddleware implements NestMiddleware {
 
     res.on('finish', () => {
       const { statusCode } = res;
-      const message: RequestLog = {
+      const message: MessageLog = {
         method,
         baseUrl,
         query: JSON.stringify(query),

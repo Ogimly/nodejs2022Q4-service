@@ -37,7 +37,6 @@ async function bootstrap() {
   const logLevel = Number(process.env.LOG_LEVEL) ?? DEFAULT_LOG_LEVEL;
   const port = Number(process.env.PORT) ?? DEFAULT_PORT;
 
-  // const app = await NestFactory.create(AppModule);
   const logger = new AppLoggerService(logLevel);
   await logger.initLogs();
 

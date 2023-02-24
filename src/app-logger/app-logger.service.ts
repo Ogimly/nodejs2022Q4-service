@@ -10,7 +10,7 @@ import {
 } from '../common/consts';
 import { ConsoleColors, LogLevels } from '../common/enums';
 import { isDirectory, isFileSizeOK } from '../common/helpers/file-helpers';
-import { RequestLog } from '../common/interfaces';
+import { MessageLog } from '../common/interfaces';
 
 @Injectable()
 export class AppLoggerService implements LoggerService {
@@ -33,13 +33,13 @@ export class AppLoggerService implements LoggerService {
     this.level = level;
   }
 
-  public async log(message: string | RequestLog, ...optionalParams: any[]) {
+  public async log(message: string | MessageLog, ...optionalParams: any[]) {
     if (this.level >= 0) {
       await this.write(LogLevels.log, ConsoleColors.Green, message, optionalParams[0]);
     }
   }
 
-  public async error(message: string | RequestLog, ...optionalParams: any[]) {
+  public async error(message: string | MessageLog, ...optionalParams: any[]) {
     if (this.level >= 1) {
       await this.write(LogLevels.error, ConsoleColors.Red, message, optionalParams[1]);
     }
@@ -71,7 +71,7 @@ export class AppLoggerService implements LoggerService {
   private async write(
     logLevelStr: string,
     color: string,
-    message: string | RequestLog,
+    message: string | MessageLog,
     optional: string
   ) {
     const past = this.currentTime;
@@ -173,11 +173,19 @@ export class AppLoggerService implements LoggerService {
     await appendFile(this.errorFileName, message);
   }
 
-  private parseMessageStr(message: string | RequestLog) {
+  private parseMessageStr(message: string | MessageLog) {
     if (typeof message === 'string') return { messageStr: message, deltaTime: 0 };
-    return {
-      messageStr: `${message.method} ${message.baseUrl}: Query params: ${message.query}, Body: ${message.body}, Status code: ${message.statusCode}`,
-      deltaTime: message.deltaTime,
-    };
+
+    if (message.message) {
+      return {
+        messageStr: `Status code: ${message.statusCode} ${message.message}`,
+        deltaTime: 0,
+      };
+    } else {
+      return {
+        messageStr: `${message.method} ${message.baseUrl}: Query params: ${message.query}, Body: ${message.body}, Status code: ${message.statusCode}`,
+        deltaTime: message.deltaTime,
+      };
+    }
   }
 }

@@ -14,11 +14,12 @@ export interface FavoritesResponse {
   tracks: TrackEntity[];
 }
 
-export interface RequestLog {
-  method: string;
-  baseUrl: string;
-  query: string;
-  body: string;
+export interface MessageLog {
   statusCode: number;
-  deltaTime: number;
+  method?: string;
+  baseUrl?: string;
+  query?: string;
+  body?: string;
+  deltaTime?: number;
+  message?: string;
 }
