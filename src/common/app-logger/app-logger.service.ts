@@ -1,13 +1,8 @@
 import { Injectable, LoggerService } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { appendFile, mkdir, readdir, writeFile } from 'fs/promises';
 import { join } from 'path';
-import {
-  DEFAULT_WRITE_LOG_FILE,
-  LOG_DIR,
-  DEFAULT_WRITE_ERROR_FILE,
-  ERROR_DIR,
-  DEFAULT_MAX_FILE_SIZE,
-} from '../consts';
+import { LOG_DIR, ERROR_DIR } from '../consts';
 import { LogLevels, ConsoleColors } from '../enums';
 import { isDirectory, isFileSizeOK } from '../helpers/file-helpers';
 import { MessageLog } from '../interfaces';
@@ -18,19 +13,21 @@ export class AppLoggerService implements LoggerService {
 
   private currentTime: Date;
 
-  private isWriteToLogFile = Number(process.env.WRITE_LOG_FILE) ?? DEFAULT_WRITE_LOG_FILE;
+  private isWriteToLogFile: number;
   private pathToLogFile = join(process.cwd(), LOG_DIR);
   private logFileName: string;
 
-  private isWriteToErrorFile =
-    Number(process.env.WRITE_ERROR_FILE) ?? DEFAULT_WRITE_ERROR_FILE;
+  private isWriteToErrorFile: number;
   private pathToErrorFile = join(process.cwd(), LOG_DIR, ERROR_DIR);
   private errorFileName: string;
 
-  private maxFileSize = Number(process.env.MAX_FILE_SIZE) ?? DEFAULT_MAX_FILE_SIZE;
+  private maxFileSize: number;
 
-  constructor(level: number) {
-    this.level = level;
+  constructor(private config: ConfigService) {
+    this.level = this.config.get<number>('logger.logLevel');
+    this.isWriteToLogFile = this.config.get<number>('logger.writeToLogFile');
+    this.isWriteToErrorFile = this.config.get<number>('logger.writeToErrorFile');
+    this.maxFileSize = this.config.get<number>('logger.maxFileSize');
   }
 
   public async log(message: string | MessageLog, ...optionalParams: any[]) {

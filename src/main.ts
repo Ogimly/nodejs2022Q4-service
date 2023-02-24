@@ -3,8 +3,8 @@ import { NestFactory } from '@nestjs/core';
 import { INestApplication } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { DEFAULT_LOG_LEVEL, DEFAULT_PORT } from './common/consts';
 import { AppLoggerService } from './common/app-logger/app-logger.service';
+import { ConfigService } from '@nestjs/config';
 
 const swaggerSetup = (port: number, app: INestApplication) => {
   const config = new DocumentBuilder()
@@ -35,13 +35,14 @@ const addListeners = (logger: AppLoggerService) => {
 };
 
 async function bootstrap() {
-  const logLevel = Number(process.env.LOG_LEVEL) ?? DEFAULT_LOG_LEVEL;
-  const port = Number(process.env.PORT) ?? DEFAULT_PORT;
+  const app = await NestFactory.create(AppModule);
+  const config = app.get(ConfigService);
 
-  const logger = new AppLoggerService(logLevel);
+  const logger = new AppLoggerService(config);
   await logger.initLogs();
+  app.useLogger(logger);
 
-  const app = await NestFactory.create(AppModule, { logger });
+  const port = config.get<number>('app.port');
 
   swaggerSetup(port, app);
 

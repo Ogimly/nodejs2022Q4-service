@@ -5,6 +5,7 @@ import {
   NestModule,
   ValidationPipe,
 } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -18,6 +19,9 @@ import { PrismaModule } from './common/prisma/prisma.module';
 import { AppExceptionsFilter } from './common/app-exceptions/app-exceptions.filter';
 import { LoggerMiddleware } from './common/app-logger/logger/logger.middleware';
 import { AuthModule } from './auth/auth.module';
+import appConfig from './common/config/app-config';
+import loggerConfig from './common/config/logger-config';
+import authConfig from './common/config/auth-config';
 
 @Module({
   imports: [
@@ -28,6 +32,10 @@ import { AuthModule } from './auth/auth.module';
     FavoritesModule,
     PrismaModule,
     AuthModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [appConfig, loggerConfig, authConfig],
+    }),
   ],
   controllers: [AppController],
   providers: [
