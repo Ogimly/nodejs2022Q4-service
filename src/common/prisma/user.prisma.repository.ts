@@ -1,4 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
+import { createHash } from 'crypto';
 import { CreateUserDto } from '../../users/dto/create-user.dto';
 import { UpdateUserDto } from '../../users/dto/update-user.dto';
 import { UserEntity } from '../../users/entities/user.entity';
@@ -10,8 +11,9 @@ export class UsersPrismaRepository {
   constructor(private prisma: PrismaService) {}
 
   public async create(createUserDto: CreateUserDto): Promise<RequestResult<UserEntity>> {
+    const { password } = createUserDto;
     const newUser = await this.prisma.user.create({
-      data: createUserDto,
+      data: { ...createUserDto, password: this.getHash(password) },
     });
 
     return {
@@ -59,7 +61,7 @@ export class UsersPrismaRepository {
         error: DBMessages.UserNotFound,
       };
 
-    if (foundUser.password !== updateUserDto.oldPassword)
+    if (foundUser.password !== this.getHash(updateUserDto.oldPassword))
       return {
         data: null,
         status: HttpStatus.FORBIDDEN,
@@ -69,7 +71,7 @@ export class UsersPrismaRepository {
     const updatedUser = await this.prisma.user.update({
       where: { id },
       data: {
-        password: updateUserDto.newPassword,
+        password: this.getHash(updateUserDto.newPassword),
         version: foundUser.version + 1,
         updatedAt: new Date(),
       },
@@ -97,5 +99,9 @@ export class UsersPrismaRepository {
       data: null,
       status: HttpStatus.NO_CONTENT,
     };
+  }
+
+  private getHash(str: string): string {
+    return createHash('sha256').update(str).digest('hex');
   }
 }
