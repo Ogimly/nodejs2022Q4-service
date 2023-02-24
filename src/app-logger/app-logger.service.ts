@@ -9,6 +9,7 @@ import {
 } from '../common/consts';
 import { ConsoleColors, LogLevels } from '../common/enums';
 import { isDirectory } from '../common/helpers/file-helpers';
+import { RequestLog } from '../common/interfaces';
 
 @Injectable()
 export class AppLoggerService implements LoggerService {
@@ -29,13 +30,13 @@ export class AppLoggerService implements LoggerService {
     this.level = level;
   }
 
-  public log(message: string, ...optionalParams: any[]) {
+  public log(message: string | RequestLog, ...optionalParams: any[]) {
     if (this.level >= 0) {
       this.write(LogLevels.log, ConsoleColors.Green, message, optionalParams[0]);
     }
   }
 
-  public error(message: string, ...optionalParams: any[]) {
+  public error(message: string | RequestLog, ...optionalParams: any[]) {
     if (this.level >= 1) {
       this.write(LogLevels.error, ConsoleColors.Red, message, optionalParams[1]);
     }
@@ -59,14 +60,24 @@ export class AppLoggerService implements LoggerService {
     }
   }
 
-  private write(nameStr: string, color: string, messageStr: string, optional: string) {
+  private write(
+    nameStr: string,
+    color: string,
+    message: string | RequestLog,
+    optional: string
+  ) {
     const past = this.currentTime;
     this.currentTime = new Date();
-    const deltaTimeStr = past ? `+${this.currentTime.getTime() - past.getTime()}ms` : '';
 
     const pidStr = `[HLS] ${process.pid} -`;
     const timeStr = this.currentTime.toLocaleString();
+    const { messageStr, deltaTime } = this.parseMessageStr(message);
     const optionalStr = `[${optional}]`;
+    const deltaTimeStr = deltaTime
+      ? `+${deltaTime}ms`
+      : past
+      ? `+${this.currentTime.getTime() - past.getTime()}ms`
+      : '';
 
     console.log(
       `${color}${pidStr}`,
@@ -79,7 +90,7 @@ export class AppLoggerService implements LoggerService {
 
     if (this.isWriteToLogFile)
       this.writeToLogFile(
-        `${pidStr} ${timeStr} ${nameStr} ${optionalStr} ${messageStr}\n`
+        `${pidStr} ${timeStr} ${nameStr} ${optionalStr} ${messageStr} ${deltaTimeStr}\n`
       );
 
     if (nameStr === LogLevels.error && this.isWriteToErrorFile)
@@ -142,5 +153,13 @@ export class AppLoggerService implements LoggerService {
 
   private async writeToErrorFile(message: string) {
     await appendFile(this.errorFileName, message);
+  }
+
+  private parseMessageStr(message: string | RequestLog) {
+    if (typeof message === 'string') return { messageStr: message, deltaTime: 0 };
+    return {
+      messageStr: `${message.method} ${message.baseUrl}: Query params: ${message.query}, Body: ${message.body}, Status code: ${message.statusCode}`,
+      deltaTime: message.deltaTime,
+    };
   }
 }

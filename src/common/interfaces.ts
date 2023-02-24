@@ -13,3 +13,12 @@ export interface FavoritesResponse {
   albums: AlbumEntity[];
   tracks: TrackEntity[];
 }
+
+export interface RequestLog {
+  method: string;
+  baseUrl: string;
+  query: string;
+  body: string;
+  statusCode: number;
+  deltaTime: number;
+}
