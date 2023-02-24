@@ -58,6 +58,23 @@ export const enum UserApiText {
   delOk = 'The user has been deleted',
 }
 
+export const enum AuthApiText {
+  tag = 'Auth',
+
+  Ok = 'Successful operation',
+  BadRequest = 'Bad request. Login or password is invalid',
+
+  signupSum = 'Sign up',
+  signupDesc = 'Sign up to Home Library',
+  signupBadRequest = 'Bad request. Body does not contain required fields',
+
+  loginSum = 'Login',
+  loginDesc = 'Login to Home Library',
+
+  refreshSum = 'Refresh token',
+  refreshDesc = 'Refresh access token',
+}
+
 export const enum ArtistApiText {
   tag = 'Artists',
 

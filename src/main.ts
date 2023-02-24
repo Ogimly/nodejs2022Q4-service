@@ -11,6 +11,7 @@ const swaggerSetup = (port: number, app: INestApplication) => {
     .setTitle('Home Library Service')
     .setDescription('Home music library service API description')
     .addServer(`http://localhost:${port}/`)
+    .addTag('Auth')
     .addTag('Users')
     .addTag('Artists')
     .addTag('Albums')
