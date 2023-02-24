@@ -4,7 +4,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { DEFAULT_LOG_LEVEL, DEFAULT_PORT } from './common/consts';
-import { AppLoggerService } from './app-logger/app-logger.service';
+import { AppLoggerService } from './common/app-logger/app-logger.service';
 
 const swaggerSetup = (port: number, app: INestApplication) => {
   const config = new DocumentBuilder()

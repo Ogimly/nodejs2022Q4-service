@@ -3,14 +3,14 @@ import { appendFile, mkdir, readdir, writeFile } from 'fs/promises';
 import { join } from 'path';
 import {
   DEFAULT_WRITE_LOG_FILE,
-  DEFAULT_WRITE_ERROR_FILE,
   LOG_DIR,
+  DEFAULT_WRITE_ERROR_FILE,
   ERROR_DIR,
   DEFAULT_MAX_FILE_SIZE,
-} from '../common/consts';
-import { ConsoleColors, LogLevels } from '../common/enums';
-import { isDirectory, isFileSizeOK } from '../common/helpers/file-helpers';
-import { MessageLog } from '../common/interfaces';
+} from '../consts';
+import { LogLevels, ConsoleColors } from '../enums';
+import { isDirectory, isFileSizeOK } from '../helpers/file-helpers';
+import { MessageLog } from '../interfaces';
 
 @Injectable()
 export class AppLoggerService implements LoggerService {
