@@ -6,9 +6,10 @@ import {
   DEFAULT_WRITE_ERROR_FILE,
   LOG_DIR,
   ERROR_DIR,
+  DEFAULT_MAX_FILE_SIZE,
 } from '../common/consts';
 import { ConsoleColors, LogLevels } from '../common/enums';
-import { isDirectory } from '../common/helpers/file-helpers';
+import { isDirectory, isFileSizeOK } from '../common/helpers/file-helpers';
 import { RequestLog } from '../common/interfaces';
 
 @Injectable()
@@ -26,42 +27,49 @@ export class AppLoggerService implements LoggerService {
   private pathToErrorFile = join(process.cwd(), LOG_DIR, ERROR_DIR);
   private errorFileName: string;
 
+  private maxFileSize = Number(process.env.MAX_FILE_SIZE) ?? DEFAULT_MAX_FILE_SIZE;
+
   constructor(level: number) {
     this.level = level;
   }
 
-  public log(message: string | RequestLog, ...optionalParams: any[]) {
+  public async log(message: string | RequestLog, ...optionalParams: any[]) {
     if (this.level >= 0) {
-      this.write(LogLevels.log, ConsoleColors.Green, message, optionalParams[0]);
+      await this.write(LogLevels.log, ConsoleColors.Green, message, optionalParams[0]);
     }
   }
 
-  public error(message: string | RequestLog, ...optionalParams: any[]) {
+  public async error(message: string | RequestLog, ...optionalParams: any[]) {
     if (this.level >= 1) {
-      this.write(LogLevels.error, ConsoleColors.Red, message, optionalParams[1]);
+      await this.write(LogLevels.error, ConsoleColors.Red, message, optionalParams[1]);
     }
   }
 
-  public warn(message: string, ...optionalParams: any[]) {
+  public async warn(message: string, ...optionalParams: any[]) {
     if (this.level >= 2) {
-      this.write(LogLevels.warn, ConsoleColors.Yellow, message, optionalParams[0]);
+      await this.write(LogLevels.warn, ConsoleColors.Yellow, message, optionalParams[0]);
     }
   }
 
-  public debug(message: string, ...optionalParams: any[]) {
+  public async debug(message: string, ...optionalParams: any[]) {
     if (this.level >= 3) {
-      this.write(LogLevels.debug, ConsoleColors.Magenta, message, optionalParams[0]);
+      await this.write(
+        LogLevels.debug,
+        ConsoleColors.Magenta,
+        message,
+        optionalParams[0]
+      );
     }
   }
 
-  public verbose(message: string, ...optionalParams: any[]) {
+  public async verbose(message: string, ...optionalParams: any[]) {
     if (this.level >= 4) {
-      this.write(LogLevels.verbose, ConsoleColors.Cyan, message, optionalParams[0]);
+      await this.write(LogLevels.verbose, ConsoleColors.Cyan, message, optionalParams[0]);
     }
   }
 
-  private write(
-    nameStr: string,
+  private async write(
+    logLevelStr: string,
     color: string,
     message: string | RequestLog,
     optional: string
@@ -82,20 +90,20 @@ export class AppLoggerService implements LoggerService {
     console.log(
       `${color}${pidStr}`,
       `${ConsoleColors.Reset}${timeStr}`,
-      `${color}${nameStr}`,
+      `${color}${logLevelStr}`,
       `${ConsoleColors.Reset}${optionalStr}`,
       `${color}${messageStr}`,
       `${ConsoleColors.Reset}${deltaTimeStr}`
     );
 
     if (this.isWriteToLogFile)
-      this.writeToLogFile(
-        `${pidStr} ${timeStr} ${nameStr} ${optionalStr} ${messageStr} ${deltaTimeStr}\n`
+      await this.writeToLogFile(
+        `${pidStr} ${timeStr} ${logLevelStr} ${optionalStr} ${messageStr} ${deltaTimeStr}\n`
       );
 
-    if (nameStr === LogLevels.error && this.isWriteToErrorFile)
-      this.writeToErrorFile(
-        `${pidStr} ${timeStr} ${nameStr} ${optionalStr} ${messageStr} ${deltaTimeStr}\n`
+    if (logLevelStr === LogLevels.error && this.isWriteToErrorFile)
+      await this.writeToErrorFile(
+        `${pidStr} ${timeStr} ${logLevelStr} ${optionalStr} ${messageStr} ${deltaTimeStr}\n`
       );
   }
 
@@ -107,7 +115,9 @@ export class AppLoggerService implements LoggerService {
         await mkdir(this.pathToLogFile);
         await this.createLogFile();
       } else {
-        const files = await readdir(this.pathToLogFile, { withFileTypes: true });
+        const files = (await readdir(this.pathToLogFile, { withFileTypes: true })).filter(
+          (file) => file.isFile()
+        );
 
         if (files.length === 0) {
           await this.createLogFile();
@@ -125,7 +135,9 @@ export class AppLoggerService implements LoggerService {
         await mkdir(this.pathToErrorFile);
         await this.createErrorFile();
       } else {
-        const files = await readdir(this.pathToErrorFile, { withFileTypes: true });
+        const files = (
+          await readdir(this.pathToErrorFile, { withFileTypes: true })
+        ).filter((file) => file.isFile());
 
         if (files.length === 0) {
           await this.createErrorFile();
@@ -148,10 +160,16 @@ export class AppLoggerService implements LoggerService {
   }
 
   private async writeToLogFile(message: string) {
+    const isOK = await isFileSizeOK(this.logFileName, this.maxFileSize);
+    if (!isOK) await this.createLogFile();
+
     await appendFile(this.logFileName, message);
   }
 
   private async writeToErrorFile(message: string) {
+    const isOK = await isFileSizeOK(this.errorFileName, this.maxFileSize);
+    if (!isOK) await this.createErrorFile();
+
     await appendFile(this.errorFileName, message);
   }
 
