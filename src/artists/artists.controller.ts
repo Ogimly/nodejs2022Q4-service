@@ -6,8 +6,6 @@ import {
   Put,
   Param,
   Delete,
-  UsePipes,
-  ValidationPipe,
   ParseUUIDPipe,
   HttpCode,
 } from '@nestjs/common';
@@ -28,7 +26,6 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistEntity } from './entities/artist.entity';
 
-@UsePipes(new ValidationPipe())
 @ApiTags(ArtistApiText.tag)
 @Controller('artist')
 export class ArtistsController {

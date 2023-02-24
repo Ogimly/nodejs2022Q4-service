@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  ClassSerializerInterceptor,
-  UseInterceptors,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -19,8 +11,6 @@ import { UserEntity } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
 import { RefreshDto } from './dto/refresh-auth.dto';
 
-@UsePipes(new ValidationPipe())
-@UseInterceptors(ClassSerializerInterceptor)
 @ApiTags(AuthApiText.tag)
 @Controller('auth')
 export class AuthController {

@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { DEFAULT_LOG_LEVEL, DEFAULT_PORT } from './common/consts';
@@ -44,8 +44,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { logger });
 
   swaggerSetup(port, app);
-
-  app.useGlobalPipes(new ValidationPipe());
 
   app.enableCors();
 

@@ -6,8 +6,6 @@ import {
   Put,
   Param,
   Delete,
-  UsePipes,
-  ValidationPipe,
   ParseUUIDPipe,
   HttpCode,
 } from '@nestjs/common';
@@ -30,7 +28,6 @@ import { TrackByIdPipe } from '../common/pipes/track-by-id/track-by-id.pipe';
 import { ValidateArtistIdPipe } from '../common/pipes/validate-artist-id/validate-artist-id.pipe';
 import { ValidateAlbumIdPipe } from '../common/pipes/validate-album-id/validate-album-id.pipe';
 
-@UsePipes(new ValidationPipe())
 @ApiTags(TrackApiText.tag)
 @Controller('track')
 export class TracksController {

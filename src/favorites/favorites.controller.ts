@@ -5,8 +5,6 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
-  UsePipes,
-  ValidationPipe,
   HttpCode,
 } from '@nestjs/common';
 import {
@@ -24,7 +22,6 @@ import { FavApiText } from '../common/enums';
 import { FavoriteEntity } from './entities/favorite.entity';
 import { FavoritesService } from './favorites.service';
 
-@UsePipes(new ValidationPipe())
 @ApiTags(FavApiText.tag)
 @Controller('favs')
 export class FavoritesController {

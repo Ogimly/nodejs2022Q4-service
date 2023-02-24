@@ -1,8 +1,4 @@
 import {
-  UsePipes,
-  ValidationPipe,
-  UseInterceptors,
-  ClassSerializerInterceptor,
   Controller,
   Post,
   Body,
@@ -30,8 +26,6 @@ import {
 import { UserEntity } from './entities/user.entity';
 import { UserApiText } from '../common/enums';
 
-@UsePipes(new ValidationPipe())
-@UseInterceptors(ClassSerializerInterceptor)
 @ApiTags(UserApiText.tag)
 @Controller('user')
 export class UsersController {

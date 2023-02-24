@@ -6,8 +6,6 @@ import {
   Put,
   Param,
   Delete,
-  UsePipes,
-  ValidationPipe,
   ParseUUIDPipe,
   HttpCode,
 } from '@nestjs/common';
@@ -29,7 +27,6 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { AlbumEntity } from './entities/album.entity';
 
-@UsePipes(new ValidationPipe())
 @ApiTags(AlbumApiText.tag)
 @Controller('album')
 export class AlbumsController {
