@@ -19,7 +19,7 @@ export class AppExceptionsFilter implements ExceptionFilter {
 
     if (exception instanceof HttpException) {
       statusCode = exception.getStatus();
-      message = exception['response']['message'];
+      message = exception['response']['message'] ?? exception['response'];
     } else {
       statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
       message = 'Internal server error';

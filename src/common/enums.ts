@@ -9,6 +9,8 @@ export const enum DBMessages {
   UserPasswordInvalid = 'Invalid user password',
   UserExists = 'User already exists',
 
+  AccessDenied = 'Login or password is invalid',
+
   ArtistNotFound = 'Artist not found',
   ArtistAdded = 'Artist added successfully',
   ArtistRemoved = 'Artist removed successfully',

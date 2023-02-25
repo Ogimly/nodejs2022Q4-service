@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from '@prisma/client';
 import { Exclude, Transform } from 'class-transformer';
 
 export class UserEntity {
@@ -22,7 +23,11 @@ export class UserEntity {
   @Transform(({ value }) => value.getTime())
   updatedAt: Date;
 
-  constructor(partial: Partial<UserEntity>) {
-    Object.assign(this, partial);
+  constructor(user: User) {
+    this.id = user.id;
+    this.login = user.login;
+    this.version = user.version;
+    this.createdAt = user.createdAt;
+    this.updatedAt = user.updatedAt;
   }
 }
