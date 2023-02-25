@@ -9,10 +9,10 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthApiText } from '../common/enums';
+import { ValidateTokenPipe } from '../common/pipes/validate-token/validate-token.pipe';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UserEntity } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
-import { RefreshDto } from './dto/refresh-auth.dto';
 import { Tokens } from './dto/token-auth.dto';
 
 @ApiTags(AuthApiText.tag)
@@ -44,7 +44,7 @@ export class AuthController {
   @ApiOkResponse({ description: AuthApiText.Ok, type: Tokens })
   @ApiUnauthorizedResponse({ description: AuthApiText.BadRequest })
   @ApiForbiddenResponse({ description: AuthApiText.AccessDenied })
-  refresh(@Body() { refreshToken }: RefreshDto) {
+  refresh(@Body(ValidateTokenPipe) refreshToken: string) {
     return this.authService.refresh(refreshToken);
   }
 }
