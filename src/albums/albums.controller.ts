@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -28,6 +29,7 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 import { AlbumEntity } from './entities/album.entity';
 
 @ApiTags(AlbumApiText.tag)
+@ApiBearerAuth('access-token')
 @Controller('album')
 export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}

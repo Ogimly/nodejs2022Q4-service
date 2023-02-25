@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -23,6 +24,7 @@ import { FavoriteEntity } from './entities/favorite.entity';
 import { FavoritesService } from './favorites.service';
 
 @ApiTags(FavApiText.tag)
+@ApiBearerAuth('access-token')
 @Controller('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}

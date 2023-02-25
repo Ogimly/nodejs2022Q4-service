@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -27,6 +28,7 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistEntity } from './entities/artist.entity';
 
 @ApiTags(ArtistApiText.tag)
+@ApiBearerAuth('access-token')
 @Controller('artist')
 export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}

@@ -18,6 +18,10 @@ const swaggerSetup = (port: number, app: INestApplication) => {
     .addTag('Tracks')
     .addTag('Favorites')
     .setVersion('1.0')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'access-token'
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, document);

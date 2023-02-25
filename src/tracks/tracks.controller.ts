@@ -14,6 +14,7 @@ import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -29,6 +30,7 @@ import { ValidateArtistIdPipe } from '../common/pipes/validate-artist-id/validat
 import { ValidateAlbumIdPipe } from '../common/pipes/validate-album-id/validate-album-id.pipe';
 
 @ApiTags(TrackApiText.tag)
+@ApiBearerAuth('access-token')
 @Controller('track')
 export class TracksController {
   constructor(private readonly tracksService: TracksService) {}

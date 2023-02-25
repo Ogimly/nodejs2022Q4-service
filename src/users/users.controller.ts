@@ -14,6 +14,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNoContentResponse,
@@ -28,6 +29,7 @@ import { UserApiText } from '../common/enums';
 import { UserByIdPipe } from '../common/pipes/user-by-id/user-by-id.pipe';
 
 @ApiTags(UserApiText.tag)
+@ApiBearerAuth('access-token')
 @Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
