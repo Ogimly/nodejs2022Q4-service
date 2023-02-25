@@ -1,10 +1,10 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { ForbiddenException, UnauthorizedException } from '@nestjs/common/exceptions';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'jsonwebtoken';
 import { DBMessages } from '../common/enums';
 import { getHash } from '../common/helpers/hash-lelpers';
-import { RequestResult } from '../common/interfaces';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
@@ -23,43 +23,27 @@ export class AuthService {
     return this.userService.create(createAuthDto);
   }
 
-  async login({ login, password }: CreateUserDto): Promise<RequestResult<Tokens>> {
+  async login({ login, password }: CreateUserDto): Promise<Tokens> {
     const user = await this.prisma.user.findFirst({ where: { login } });
 
-    if (!user)
-      return {
-        data: null,
-        status: HttpStatus.FORBIDDEN,
-        error: DBMessages.AccessDenied,
-      };
+    if (!user) throw new ForbiddenException(DBMessages.AccessDenied);
 
     if (getHash(password) !== user.password)
-      return {
-        data: null,
-        status: HttpStatus.FORBIDDEN,
-        error: DBMessages.AccessDenied,
-      };
+      throw new ForbiddenException(DBMessages.AccessDenied);
 
     const tokens = await this.getTokens(user.id, login);
     await this.updateRefreshTokenHash(user.id, tokens.refreshToken);
 
-    return {
-      data: tokens,
-      status: HttpStatus.OK,
-    };
+    return tokens;
   }
 
-  async refresh(refreshToken: string): Promise<RequestResult<Tokens>> {
+  async refresh(refreshToken: string): Promise<Tokens> {
     try {
       await this.jwtService.verifyAsync(refreshToken, {
         secret: this.config.get<string>('auth.jwtSecretRefreshKey'),
       });
     } catch (error) {
-      return {
-        data: null,
-        status: HttpStatus.UNAUTHORIZED,
-        error: DBMessages.RefreshTokenInvalid,
-      };
+      throw new UnauthorizedException(DBMessages.RefreshTokenInvalid);
     }
 
     const jwtPayload = this.jwtService.decode(refreshToken);
@@ -70,27 +54,15 @@ export class AuthService {
       where: { id: userId },
     });
 
-    if (!user)
-      return {
-        data: null,
-        status: HttpStatus.FORBIDDEN,
-        error: DBMessages.RefreshTokenInvalid,
-      };
+    if (!user) throw new ForbiddenException(DBMessages.RefreshTokenInvalid);
 
     if (getHash(refreshToken) !== user.refreshToken || login !== user.login)
-      return {
-        data: null,
-        status: HttpStatus.FORBIDDEN,
-        error: DBMessages.RefreshTokenInvalid,
-      };
+      throw new ForbiddenException(DBMessages.RefreshTokenInvalid);
 
     const tokens = await this.getTokens(user.id, login);
     await this.updateRefreshTokenHash(user.id, tokens.refreshToken);
 
-    return {
-      data: tokens,
-      status: HttpStatus.OK,
-    };
+    return tokens;
   }
 
   async getTokens(userId: string, login: string): Promise<Tokens> {

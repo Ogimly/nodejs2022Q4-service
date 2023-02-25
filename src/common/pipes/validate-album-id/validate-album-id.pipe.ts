@@ -1,4 +1,4 @@
-import { HttpException, Injectable, PipeTransform } from '@nestjs/common';
+import { Injectable, PipeTransform } from '@nestjs/common';
 import { AlbumsService } from '../../../albums/albums.service';
 import { CreateTrackDto } from '../../../tracks/dto/create-track.dto';
 import { UpdateTrackDto } from '../../../tracks/dto/update-track.dto';
@@ -10,11 +10,7 @@ export class ValidateAlbumIdPipe implements PipeTransform {
   async transform(
     dto: CreateTrackDto | UpdateTrackDto
   ): Promise<CreateTrackDto | UpdateTrackDto> {
-    const response = await this.albumsService.validate(dto.albumId);
-
-    if (response.error) {
-      throw new HttpException(response.error, response.status);
-    }
+    await this.albumsService.validate(dto.albumId);
 
     return dto;
   }

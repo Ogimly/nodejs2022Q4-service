@@ -25,6 +25,7 @@ import {
 } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
 import { UserApiText } from '../common/enums';
+import { UserByIdPipe } from '../common/pipes/user-by-id/user-by-id.pipe';
 
 @ApiTags(UserApiText.tag)
 @Controller('user')
@@ -54,8 +55,8 @@ export class UsersController {
   @ApiBadRequestResponse({ description: UserApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })
-  findOne(@Param('userId', new ParseUUIDPipe()) id: string) {
-    return this.usersService.findOne(id);
+  findOne(@Param('userId', ParseUUIDPipe, UserByIdPipe) user: UserEntity) {
+    return user;
   }
 
   @Put(':userId')
@@ -66,10 +67,10 @@ export class UsersController {
   @ApiForbiddenResponse({ description: UserApiText.putForbidden })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })
   update(
-    @Param('userId', new ParseUUIDPipe()) id: string,
+    @Param('userId', ParseUUIDPipe, UserByIdPipe) user: UserEntity,
     @Body() updateUserDto: UpdateUserDto
   ) {
-    return this.usersService.update(id, updateUserDto);
+    return this.usersService.update(user.id, updateUserDto);
   }
 
   @Delete(':userId')
@@ -79,7 +80,7 @@ export class UsersController {
   @ApiBadRequestResponse({ description: UserApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })
-  remove(@Param('userId', new ParseUUIDPipe()) id: string) {
-    return this.usersService.remove(id);
+  remove(@Param('userId', ParseUUIDPipe, UserByIdPipe) user: UserEntity) {
+    return this.usersService.remove(user.id);
   }
 }

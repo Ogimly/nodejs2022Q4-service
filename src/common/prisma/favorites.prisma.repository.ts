@@ -1,12 +1,12 @@
-import { HttpStatus } from '@nestjs/common';
+import { NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { DBEntities, DBMessages } from '../enums';
-import { FavoritesResponse, RequestResult } from '../interfaces';
+import { FavoritesResponse } from '../interfaces';
 import { PrismaService } from './prisma.service';
 
 export class FavoritesPrismaRepository {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<RequestResult<FavoritesResponse>> {
+  async findAll(): Promise<FavoritesResponse> {
     const res = await this.prisma.favorites.findMany({
       select: {
         artists: {
@@ -27,33 +27,17 @@ export class FavoritesPrismaRepository {
       },
     });
 
-    return {
-      data:
-        res.length === 0
-          ? {
-              artists: [],
-              tracks: [],
-              albums: [],
-            }
-          : res[0],
-      status: HttpStatus.OK,
-    };
+    return res.length === 0 ? { artists: [], tracks: [], albums: [] } : res[0];
   }
 
-  async addEntity(
-    EntityId: string,
-    nameEntity: DBEntities
-  ): Promise<RequestResult<string>> {
+  async addEntity(EntityId: string, nameEntity: DBEntities): Promise<string> {
     const namePrisma = nameEntity.toLocaleLowerCase();
     const res = await this.prisma[namePrisma].findUnique({ where: { id: EntityId } });
 
-    if (!res) {
-      return {
-        data: null,
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        error: `${nameEntity} ${DBMessages.EntityNotFound}`,
-      };
-    }
+    if (!res)
+      throw new UnprocessableEntityException(
+        `${nameEntity} ${DBMessages.EntityNotFound}`
+      );
 
     const favorites = await this.prisma.favorites.findMany();
 
@@ -70,40 +54,24 @@ export class FavoritesPrismaRepository {
       data: { favoritesId },
     });
 
-    return {
-      data: `${nameEntity} ${DBMessages.EntityAdded}`,
-      status: HttpStatus.CREATED,
-    };
+    return `${nameEntity} ${DBMessages.EntityAdded}`;
   }
 
-  async removeEntity(EntityId: string, nameEntity: DBEntities) {
+  async removeEntity(EntityId: string, nameEntity: DBEntities): Promise<void> {
     const namePrisma = nameEntity.toLocaleLowerCase();
     const res = await this.prisma[namePrisma].findUnique({ where: { id: EntityId } });
 
-    if (!res) {
-      return {
-        data: null,
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        error: `${nameEntity} ${DBMessages.EntityNotFound}`,
-      };
-    }
+    if (!res)
+      throw new UnprocessableEntityException(
+        `${nameEntity} ${DBMessages.EntityNotFound}`
+      );
 
-    if (res.favoritesId === null) {
-      return {
-        data: null,
-        status: HttpStatus.NOT_FOUND,
-        error: `${nameEntity} ${DBMessages.EntityNotInFavorites}`,
-      };
-    }
+    if (res.favoritesId === null)
+      throw new NotFoundException(`${nameEntity} ${DBMessages.EntityNotInFavorites}`);
 
     await this.prisma[namePrisma].update({
       where: { id: EntityId },
       data: { favoritesId: null },
     });
-
-    return {
-      data: null,
-      status: HttpStatus.NO_CONTENT,
-    };
   }
 }

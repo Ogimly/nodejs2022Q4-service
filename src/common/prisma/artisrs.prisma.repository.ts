@@ -1,6 +1,5 @@
-import { HttpStatus } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { DBMessages } from '../enums';
-import { RequestResult } from '../interfaces';
 import { ArtistEntity } from '../../artists/entities/artist.entity';
 import { CreateArtistDto } from '../../artists/dto/create-artist.dto';
 import { UpdateArtistDto } from '../../artists/dto/update-artist.dto';
@@ -9,89 +8,49 @@ import { PrismaService } from './prisma.service';
 export class ArtistsPrismaRepository {
   constructor(private prisma: PrismaService) {}
 
-  public async create(
-    createArtistDto: CreateArtistDto
-  ): Promise<RequestResult<ArtistEntity>> {
+  public async create(createArtistDto: CreateArtistDto): Promise<ArtistEntity> {
     const newArtist = await this.prisma.artist.create({
       data: createArtistDto,
     });
 
-    return {
-      data: new ArtistEntity(newArtist),
-      status: HttpStatus.CREATED,
-    };
+    return new ArtistEntity(newArtist);
   }
 
-  public async findAll(): Promise<RequestResult<ArtistEntity[]>> {
+  public async findAll(): Promise<ArtistEntity[]> {
     const artists = await this.prisma.artist.findMany();
 
-    return {
-      data: artists.map((artist) => new ArtistEntity(artist)),
-      status: HttpStatus.OK,
-    };
+    return artists.map((artist) => new ArtistEntity(artist));
   }
 
-  public async findOne(id: string): Promise<RequestResult<ArtistEntity>> {
+  public async findOne(id: string): Promise<ArtistEntity> {
     const foundArtist = await this.prisma.artist.findUnique({ where: { id } });
 
-    if (!foundArtist) {
-      return {
-        data: null,
-        status: HttpStatus.NOT_FOUND,
-        error: DBMessages.ArtistNotFound,
-      };
-    }
+    if (!foundArtist) throw new NotFoundException(DBMessages.ArtistNotFound);
 
-    return {
-      data: new ArtistEntity(foundArtist),
-      status: HttpStatus.OK,
-    };
+    return new ArtistEntity(foundArtist);
   }
 
   public async update(
     id: string,
     updateArtistDto: UpdateArtistDto
-  ): Promise<RequestResult<ArtistEntity>> {
+  ): Promise<ArtistEntity> {
     const updatedArtist = await this.prisma.artist.update({
       where: { id },
       data: updateArtistDto,
     });
 
-    return {
-      data: new ArtistEntity(updatedArtist),
-      status: HttpStatus.OK,
-    };
+    return new ArtistEntity(updatedArtist);
   }
 
-  public async remove(id: string): Promise<RequestResult<ArtistEntity>> {
+  public async remove(id: string): Promise<void> {
     await this.prisma.artist.delete({ where: { id } });
-
-    return {
-      data: null,
-      status: HttpStatus.NO_CONTENT,
-    };
   }
 
-  public async validate(id: string): Promise<RequestResult<boolean>> {
-    if (id === null)
-      return {
-        data: true,
-        status: HttpStatus.OK,
-      };
+  public async validate(id: string): Promise<boolean> {
+    if (id === null) return true;
 
-    const foundArtist = await this.prisma.artist.findUnique({ where: { id } });
+    await this.findOne(id);
 
-    if (!foundArtist) {
-      return {
-        data: false,
-        status: HttpStatus.NOT_FOUND,
-        error: DBMessages.ArtistNotFound,
-      };
-    }
-
-    return {
-      data: true,
-      status: HttpStatus.OK,
-    };
+    return true;
   }
 }

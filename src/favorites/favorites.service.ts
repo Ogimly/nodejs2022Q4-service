@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DBEntities } from '../common/enums';
-import { RequestResult, FavoritesResponse } from '../common/interfaces';
+import { FavoritesResponse } from '../common/interfaces';
 import { FavoritesPrismaRepository } from '../common/prisma/favorites.prisma.repository';
 import { PrismaService } from '../common/prisma/prisma.service';
 
@@ -12,7 +12,7 @@ export class FavoritesService {
     this.favorites = new FavoritesPrismaRepository(prisma);
   }
 
-  findAll(): Promise<RequestResult<FavoritesResponse>> {
+  findAll(): Promise<FavoritesResponse> {
     return this.favorites.findAll();
   }
 
