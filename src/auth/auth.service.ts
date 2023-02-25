@@ -8,7 +8,6 @@ import { RequestResult } from '../common/interfaces';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
-import { RefreshDto } from './dto/refresh-auth.dto';
 import { Tokens } from './dto/token-auth.dto';
 
 @Injectable()
@@ -50,8 +49,48 @@ export class AuthService {
     };
   }
 
-  refresh(createAuthDto: RefreshDto) {
-    return 'This action refresh token';
+  async refresh(refreshToken: string): Promise<RequestResult<Tokens>> {
+    try {
+      await this.jwtService.verifyAsync(refreshToken, {
+        secret: this.config.get<string>('auth.jwtSecretRefreshKey'),
+      });
+    } catch (error) {
+      return {
+        data: null,
+        status: HttpStatus.UNAUTHORIZED,
+        error: DBMessages.RefreshTokenInvalid,
+      };
+    }
+
+    const jwtPayload = this.jwtService.decode(refreshToken);
+    const userId = jwtPayload['userId'];
+    const login = jwtPayload['login'];
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user)
+      return {
+        data: null,
+        status: HttpStatus.FORBIDDEN,
+        error: DBMessages.RefreshTokenInvalid,
+      };
+
+    if (getHash(refreshToken) !== user.refreshToken || login !== user.login)
+      return {
+        data: null,
+        status: HttpStatus.FORBIDDEN,
+        error: DBMessages.RefreshTokenInvalid,
+      };
+
+    const tokens = await this.getTokens(user.id, login);
+    await this.updateRefreshTokenHash(user.id, tokens.refreshToken);
+
+    return {
+      data: tokens,
+      status: HttpStatus.OK,
+    };
   }
 
   async getTokens(userId: string, login: string): Promise<Tokens> {

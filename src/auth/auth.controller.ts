@@ -6,6 +6,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthApiText } from '../common/enums';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -39,7 +40,11 @@ export class AuthController {
 
   @Post('refresh')
   @HttpCode(200)
-  refresh(@Body() refreshDto: RefreshDto) {
-    return this.authService.refresh(refreshDto);
+  @ApiOperation({ summary: AuthApiText.refreshSum, description: AuthApiText.refreshDesc })
+  @ApiOkResponse({ description: AuthApiText.Ok, type: Tokens })
+  @ApiUnauthorizedResponse({ description: AuthApiText.BadRequest })
+  @ApiForbiddenResponse({ description: AuthApiText.AccessDenied })
+  refresh(@Body() { refreshToken }: RefreshDto) {
+    return this.authService.refresh(refreshToken);
   }
 }
