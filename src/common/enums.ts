@@ -64,11 +64,11 @@ export const enum AuthApiText {
   tag = 'Auth',
 
   Ok = 'Successful operation',
-  BadRequest = 'Bad request. Login or password is invalid',
+  BadRequest = 'Bad request. Body does not contain required fields',
+  AccessDenied = 'Login or password is invalid',
 
   signupSum = 'Sign up',
   signupDesc = 'Sign up to Home Library',
-  signupBadRequest = 'Bad request. Body does not contain required fields',
 
   loginSum = 'Login',
   loginDesc = 'Login to Home Library',

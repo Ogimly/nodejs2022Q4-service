@@ -23,8 +23,3 @@ export interface MessageLog {
   deltaTime?: number;
   message?: string;
 }
-
-export interface Tokens {
-  accessToken: string;
-  refreshToken: string;
-}

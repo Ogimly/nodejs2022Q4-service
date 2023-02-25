@@ -4,11 +4,12 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'jsonwebtoken';
 import { DBMessages } from '../common/enums';
 import { getHash } from '../common/helpers/hash-lelpers';
-import { RequestResult, Tokens } from '../common/interfaces';
+import { RequestResult } from '../common/interfaces';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { RefreshDto } from './dto/refresh-auth.dto';
+import { Tokens } from './dto/token-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -68,7 +69,7 @@ export class AuthService {
       }),
     ]);
 
-    return { accessToken, refreshToken };
+    return new Tokens({ accessToken, refreshToken });
   }
 
   private async updateRefreshTokenHash(id: string, token: string) {
