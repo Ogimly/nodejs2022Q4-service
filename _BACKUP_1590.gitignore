@@ -32,16 +32,13 @@ lerna-debug.log*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
+<<<<<<< HEAD
 !.vscode/extensions.json
 
 .env
 # db
 db/data
 db/logs
-
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
+=======
 !.vscode/extensions.json
+>>>>>>> 9c24cdd7e921af913788921e5edaa5491159b08b

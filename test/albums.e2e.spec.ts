@@ -2,11 +2,7 @@ import { request } from './lib';
 import { StatusCodes } from 'http-status-codes';
 import { albumsRoutes, artistsRoutes, tracksRoutes } from './endpoints';
 import { validate } from 'uuid';
-import {
-  getTokenAndUserId,
-  shouldAuthorizationBeTested,
-  removeTokenUser,
-} from './utils';
+import { getTokenAndUserId, shouldAuthorizationBeTested, removeTokenUser } from './utils';
 
 const createAlbumDto = {
   name: 'TEST_ALBUM',
@@ -121,10 +117,7 @@ describe('Album (e2e)', () => {
 
     it('should respond with BAD_REQUEST in case of invalid required data', async () => {
       const responses = await Promise.all([
-        unauthorizedRequest
-          .post(albumsRoutes.create)
-          .set(commonHeaders)
-          .send({}),
+        unauthorizedRequest.post(albumsRoutes.create).set(commonHeaders).send({}),
         unauthorizedRequest.post(albumsRoutes.create).set(commonHeaders).send({
           name: 'TEST_ALBUM',
         }),
@@ -138,10 +131,8 @@ describe('Album (e2e)', () => {
       ]);
 
       expect(
-        responses.every(
-          ({ statusCode }) => statusCode === StatusCodes.BAD_REQUEST,
-        ),
-      );
+        responses.every(({ statusCode }) => statusCode === StatusCodes.BAD_REQUEST)
+      ).toBe(true);
     });
   });
 
