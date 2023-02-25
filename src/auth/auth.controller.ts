@@ -33,7 +33,7 @@ export class AuthController {
   @ApiOperation({ summary: AuthApiText.loginSum, description: AuthApiText.loginDesc })
   @ApiOkResponse({ description: AuthApiText.Ok, type: Tokens })
   @ApiBadRequestResponse({ description: AuthApiText.BadRequest })
-  @ApiForbiddenResponse({ description: AuthApiText.AccessDenied })
+  @ApiForbiddenResponse({ description: AuthApiText.LoginPassInvalid })
   login(@Body() loginDto: CreateUserDto) {
     return this.authService.login(loginDto);
   }

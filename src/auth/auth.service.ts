@@ -26,25 +26,21 @@ export class AuthService {
   async login({ login, password }: CreateUserDto): Promise<Tokens> {
     const user = await this.prisma.user.findFirst({ where: { login } });
 
-    if (!user) throw new ForbiddenException(DBMessages.AccessDenied);
+    if (!user) throw new ForbiddenException(DBMessages.LoginPassInvalid);
 
     if (getHash(password) !== user.password)
-      throw new ForbiddenException(DBMessages.AccessDenied);
+      throw new ForbiddenException(DBMessages.LoginPassInvalid);
 
     const tokens = await this.getTokens(user.id, login);
     await this.updateRefreshTokenHash(user.id, tokens.refreshToken);
+
+    this.verifyAccessToken(tokens.accessToken);
 
     return tokens;
   }
 
   async refresh(refreshToken: string): Promise<Tokens> {
-    try {
-      await this.jwtService.verifyAsync(refreshToken, {
-        secret: this.config.get<string>('auth.jwtSecretRefreshKey'),
-      });
-    } catch (error) {
-      throw new UnauthorizedException(DBMessages.RefreshTokenInvalid);
-    }
+    this.verifyRefreshToken(refreshToken);
 
     const jwtPayload = this.jwtService.decode(refreshToken);
     const userId = jwtPayload['userId'];
@@ -88,5 +84,27 @@ export class AuthService {
       where: { id },
       data: { refreshToken: getHash(token) },
     });
+  }
+
+  public verifyAccessToken(accessToken: string) {
+    try {
+      const res = this.jwtService.verify(accessToken, {
+        secret: this.config.get<string>('auth.jwtSecretKey'),
+      });
+
+      return res;
+    } catch (error) {
+      throw new UnauthorizedException(DBMessages.AccessDenied);
+    }
+  }
+
+  private verifyRefreshToken(refreshToken: string) {
+    try {
+      return this.jwtService.verify(refreshToken, {
+        secret: this.config.get<string>('auth.jwtSecretRefreshKey'),
+      });
+    } catch {
+      throw new UnauthorizedException(DBMessages.RefreshTokenInvalid);
+    }
   }
 }

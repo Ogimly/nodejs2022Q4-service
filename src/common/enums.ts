@@ -9,7 +9,8 @@ export const enum DBMessages {
   UserPasswordInvalid = 'Invalid user password',
   UserExists = 'User already exists',
 
-  AccessDenied = 'Login or password is invalid',
+  AccessDenied = 'Access denied',
+  LoginPassInvalid = 'Login or password is invalid',
   RefreshTokenInvalid = 'Refresh token is invalid or expired',
 
   ArtistNotFound = 'Artist not found',
@@ -66,7 +67,8 @@ export const enum AuthApiText {
 
   Ok = 'Successful operation',
   BadRequest = 'Bad request. Body does not contain required fields',
-  AccessDenied = 'Login or password is invalid',
+  AccessDenied = 'Access denied',
+  LoginPassInvalid = 'Login or password is invalid',
 
   signupSum = 'Sign up',
   signupDesc = 'Sign up to Home Library',
