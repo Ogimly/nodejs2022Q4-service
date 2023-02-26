@@ -14,6 +14,7 @@ git clone https://github.com/Ogimly/nodejs2022Q4-service.git
 ## Installing NPM modules
 
 ```
+git checkout develop-log-and-auth
 npm install
 ```
 
