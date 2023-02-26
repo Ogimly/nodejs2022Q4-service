@@ -8,6 +8,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Public } from '../common/decorators/public/public.decorator';
 import { AuthApiText } from '../common/enums';
 import { ValidateTokenPipe } from '../common/pipes/validate-token/validate-token.pipe';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -16,6 +17,7 @@ import { AuthService } from './auth.service';
 import { Tokens } from './dto/token-auth.dto';
 
 @ApiTags(AuthApiText.tag)
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
