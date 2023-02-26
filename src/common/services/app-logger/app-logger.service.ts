@@ -2,10 +2,10 @@ import { Injectable, LoggerService } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { appendFile, mkdir, readdir, writeFile } from 'fs/promises';
 import { join } from 'path';
-import { LOG_DIR, ERROR_DIR } from '../consts';
-import { LogLevels, ConsoleColors } from '../enums';
-import { isDirectory, isFileSizeOK } from '../helpers/file-helpers';
-import { MessageLog } from '../interfaces';
+import { LOG_DIR, ERROR_DIR } from '../../consts';
+import { LogLevels, ConsoleColors } from '../../enums';
+import { isDirectory, isFileSizeOK } from '../../helpers/file-helpers';
+import { MessageLog } from '../../interfaces';
 
 @Injectable()
 export class AppLoggerService implements LoggerService {

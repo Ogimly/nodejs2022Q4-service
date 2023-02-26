@@ -6,7 +6,7 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
-import { MessageLog } from '../interfaces';
+import { MessageLog } from '../../interfaces';
 
 @Catch()
 export class AppExceptionsFilter implements ExceptionFilter {

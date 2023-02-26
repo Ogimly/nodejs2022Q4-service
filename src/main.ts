@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { INestApplication } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { AppLoggerService } from './common/app-logger/app-logger.service';
+import { AppLoggerService } from './common/services/app-logger/app-logger.service';
 import { ConfigService } from '@nestjs/config';
 
 const swaggerSetup = (port: number, app: INestApplication) => {
