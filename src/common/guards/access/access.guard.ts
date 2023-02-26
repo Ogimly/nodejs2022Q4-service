@@ -7,6 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
+import { IS_PUBLIC_KEY } from '../../consts';
 import { DBMessages } from '../../enums';
 
 @Injectable()
@@ -16,7 +17,7 @@ export class AccessGuard implements CanActivate {
   canActivate(
     context: ExecutionContext
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const isPublic = this.reflector.getAllAndOverride('isPublic', [
+    const isPublic = this.reflector.getAllAndOverride(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
