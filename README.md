@@ -42,6 +42,7 @@ After starting the app on port (4000 as default) you can open in your browser Op
 
 For authorization you can press `Authorize` button
 ![image](https://user-images.githubusercontent.com/101447709/221406541-c608914b-e46b-4795-83d6-b668489a8c0d.png)
+
 and type your access token (without `Bearer`!)
 ![image](https://user-images.githubusercontent.com/101447709/221406591-59c3e0d6-231e-4e76-af01-62762b2d2e96.png)
 
@@ -56,8 +57,11 @@ Logs are written to `logs` folder and additionally errors are written to `errors
 Logger parameters setting in `.env` file, for example:
 
 `LOG_LEVEL=5`, values: `0` - only `log` event, `1` + `error`, `2` + `warn`, `3` +`debug`, `4` and more - all log events
+
 `WRITE_LOG_FILE=1`, values: `1` - write logs to file, `0` - no
+
 `WRITE_ERROR_FILE=1`, values: `1` - write errors to separate file, `0` - no
+
 `MAX_FILE_SIZE=100`, max file size for log file rotation (kB)
 
 ## Scanning
