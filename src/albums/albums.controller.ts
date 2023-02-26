@@ -17,6 +17,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -57,6 +58,7 @@ export class AlbumsController {
   @ApiBadRequestResponse({ description: AlbumApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
   @ApiNotFoundResponse({ description: AlbumApiText.NotFound })
+  @ApiParam({ name: 'id', type: String })
   findOne(@Param('id', ParseUUIDPipe, AlbumByIdPipe) album: AlbumEntity) {
     return album;
   }
@@ -66,6 +68,7 @@ export class AlbumsController {
   @ApiBadRequestResponse({ description: AlbumApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
   @ApiNotFoundResponse({ description: AlbumApiText.NotFound })
+  @ApiParam({ name: 'id', type: String })
   update(
     @Param('id', ParseUUIDPipe, AlbumByIdPipe) album: AlbumEntity,
     @Body(ValidateArtistIdPipe) updateAlbumDto: UpdateAlbumDto
@@ -80,6 +83,7 @@ export class AlbumsController {
   @ApiBadRequestResponse({ description: AlbumApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
   @ApiNotFoundResponse({ description: AlbumApiText.NotFound })
+  @ApiParam({ name: 'id', type: String })
   remove(@Param('id', ParseUUIDPipe, AlbumByIdPipe) album: AlbumEntity) {
     return this.albumsService.remove(album.id);
   }

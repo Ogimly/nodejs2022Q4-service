@@ -17,6 +17,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -59,6 +60,7 @@ export class ArtistsController {
   @ApiBadRequestResponse({ description: ArtistApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
   @ApiNotFoundResponse({ description: ArtistApiText.NotFound })
+  @ApiParam({ name: 'id', type: String })
   findOne(@Param('id', ParseUUIDPipe, ArtistByIdPipe) artist: ArtistEntity) {
     return artist;
   }
@@ -69,6 +71,7 @@ export class ArtistsController {
   @ApiBadRequestResponse({ description: ArtistApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
   @ApiNotFoundResponse({ description: ArtistApiText.NotFound })
+  @ApiParam({ name: 'id', type: String })
   update(
     @Param('id', ParseUUIDPipe, ArtistByIdPipe) artist: ArtistEntity,
     @Body() updateArtistDto: UpdateArtistDto
@@ -83,6 +86,7 @@ export class ArtistsController {
   @ApiBadRequestResponse({ description: ArtistApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
   @ApiNotFoundResponse({ description: ArtistApiText.NotFound })
+  @ApiParam({ name: 'id', type: String })
   remove(@Param('id', ParseUUIDPipe, ArtistByIdPipe) artist: ArtistEntity) {
     return this.artistsService.remove(artist.id);
   }

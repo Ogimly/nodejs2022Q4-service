@@ -21,6 +21,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -57,6 +58,7 @@ export class UsersController {
   @ApiBadRequestResponse({ description: UserApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })
+  @ApiParam({ name: 'userId', type: String })
   findOne(@Param('userId', ParseUUIDPipe, UserByIdPipe) user: UserEntity) {
     return user;
   }
@@ -68,6 +70,7 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   @ApiForbiddenResponse({ description: UserApiText.putForbidden })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })
+  @ApiParam({ name: 'userId', type: String })
   update(
     @Param('userId', ParseUUIDPipe, UserByIdPipe) user: UserEntity,
     @Body() updateUserDto: UpdateUserDto
@@ -82,6 +85,7 @@ export class UsersController {
   @ApiBadRequestResponse({ description: UserApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })
+  @ApiParam({ name: 'userId', type: String })
   remove(@Param('userId', ParseUUIDPipe, UserByIdPipe) user: UserEntity) {
     return this.usersService.remove(user.id);
   }

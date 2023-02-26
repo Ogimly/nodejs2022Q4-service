@@ -20,6 +20,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -60,6 +61,7 @@ export class TracksController {
   @ApiBadRequestResponse({ description: TrackApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
   @ApiNotFoundResponse({ description: TrackApiText.NotFound })
+  @ApiParam({ name: 'id', type: String })
   findOne(@Param('id', ParseUUIDPipe, TrackByIdPipe) track: TrackEntity) {
     return track;
   }
@@ -70,6 +72,7 @@ export class TracksController {
   @ApiBadRequestResponse({ description: TrackApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
   @ApiNotFoundResponse({ description: TrackApiText.NotFound })
+  @ApiParam({ name: 'id', type: String })
   update(
     @Param('id', ParseUUIDPipe, TrackByIdPipe) track: TrackEntity,
     @Body(ValidateArtistIdPipe, ValidateAlbumIdPipe) updateTrackDto: UpdateTrackDto
@@ -84,6 +87,7 @@ export class TracksController {
   @ApiBadRequestResponse({ description: TrackApiText.BadRequest })
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
   @ApiNotFoundResponse({ description: TrackApiText.NotFound })
+  @ApiParam({ name: 'id', type: String })
   remove(@Param('id', ParseUUIDPipe, TrackByIdPipe) track: TrackEntity) {
     return this.tracksService.remove(track.id);
   }
