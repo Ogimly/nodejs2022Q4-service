@@ -22,6 +22,7 @@ import appConfig from './common/config/app-config';
 import loggerConfig from './common/config/logger-config';
 import authConfig from './common/config/auth-config';
 import { AccessGuard } from './common/guards/access/access.guard';
+import { HashService } from './common/services/hash/hash.service';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { AccessGuard } from './common/guards/access/access.guard';
       provide: APP_GUARD,
       useClass: AccessGuard,
     },
+    HashService,
   ],
 })
 export class AppModule implements NestModule {

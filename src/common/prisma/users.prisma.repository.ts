@@ -3,16 +3,18 @@ import { CreateUserDto } from '../../users/dto/create-user.dto';
 import { UpdateUserDto } from '../../users/dto/update-user.dto';
 import { UserEntity } from '../../users/entities/user.entity';
 import { DBMessages } from '../enums';
-import { getHash } from '../helpers/hash-lelpers';
+import { HashService } from '../services/hash/hash.service';
 import { PrismaService } from './prisma.service';
 
 export class UsersPrismaRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private hashService: HashService) {}
 
   public async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     const { password } = createUserDto;
+
+    const hashPassword = await this.hashService.getHash(password);
     const newUser = await this.prisma.user.create({
-      data: { ...createUserDto, password: getHash(password) },
+      data: { ...createUserDto, password: hashPassword },
     });
 
     return new UserEntity(newUser);
@@ -33,16 +35,20 @@ export class UsersPrismaRepository {
   }
 
   public async update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
-    const foundUser = await this.prisma.user.findUnique({ where: { id } });
+    const { password, version } = await this.prisma.user.findUnique({ where: { id } });
 
-    if (foundUser.password !== getHash(updateUserDto.oldPassword))
-      throw new ForbiddenException(DBMessages.UserPasswordInvalid);
+    const matchHash = await this.hashService.matchHash(
+      updateUserDto.oldPassword,
+      password
+    );
+    if (!matchHash) throw new ForbiddenException(DBMessages.UserPasswordInvalid);
 
+    const hashPassword = await this.hashService.getHash(updateUserDto.newPassword);
     const updatedUser = await this.prisma.user.update({
       where: { id },
       data: {
-        password: getHash(updateUserDto.newPassword),
-        version: foundUser.version + 1,
+        password: hashPassword,
+        version: version + 1,
         updatedAt: new Date(),
       },
     });

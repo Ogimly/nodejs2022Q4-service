@@ -31,6 +31,7 @@ const addListeners = (logger: AppLoggerService) => {
   process
     .on('unhandledRejection', async () => {
       await logger.error('Unhandled Rejection...');
+      process.exit(1);
     })
     .on('uncaughtException', async () => {
       await logger.error('Uncaught Exception...');

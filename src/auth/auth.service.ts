@@ -4,8 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'jsonwebtoken';
 import { DBMessages } from '../common/enums';
-import { getHash } from '../common/helpers/hash-lelpers';
 import { PrismaService } from '../common/prisma/prisma.service';
+import { HashService } from '../common/services/hash/hash.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { Tokens } from './dto/token-auth.dto';
@@ -16,7 +16,8 @@ export class AuthService {
     private userService: UsersService,
     private config: ConfigService,
     private prisma: PrismaService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private hashService: HashService
   ) {}
 
   signup(createAuthDto: CreateUserDto) {
@@ -25,16 +26,13 @@ export class AuthService {
 
   async login({ login, password }: CreateUserDto): Promise<Tokens> {
     const user = await this.prisma.user.findFirst({ where: { login } });
-
     if (!user) throw new ForbiddenException(DBMessages.LoginPassInvalid);
 
-    if (getHash(password) !== user.password)
-      throw new ForbiddenException(DBMessages.LoginPassInvalid);
+    const matchHash = await this.hashService.matchHash(password, user.password);
+    if (!matchHash) throw new ForbiddenException(DBMessages.LoginPassInvalid);
 
     const tokens = await this.getTokens(user.id, login);
     await this.updateRefreshTokenHash(user.id, tokens.refreshToken);
-
-    this.verifyAccessToken(tokens.accessToken);
 
     return tokens;
   }
@@ -46,13 +44,11 @@ export class AuthService {
     const userId = jwtPayload['userId'];
     const login = jwtPayload['login'];
 
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-    });
-
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new ForbiddenException(DBMessages.RefreshTokenInvalid);
 
-    if (getHash(refreshToken) !== user.refreshToken || login !== user.login)
+    const matchHash = await this.hashService.matchHash(refreshToken, user.refreshToken);
+    if (!matchHash || login !== user.login)
       throw new ForbiddenException(DBMessages.RefreshTokenInvalid);
 
     const tokens = await this.getTokens(user.id, login);
@@ -80,9 +76,11 @@ export class AuthService {
   }
 
   private async updateRefreshTokenHash(id: string, token: string) {
+    const refreshToken = await this.hashService.getHash(token);
+
     await this.prisma.user.update({
       where: { id },
-      data: { refreshToken: getHash(token) },
+      data: { refreshToken },
     });
   }
 
