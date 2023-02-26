@@ -23,6 +23,7 @@
     "start:nodemon": "nodemon --exitcrash -L src/main.ts",
     "start:prisma": "npx prisma generate && npx prisma migrate dev && nodemon --exitcrash -L src/main.ts",
     "docker:start": "docker-compose up",
+    "docker:build": "docker-compose up --build",
     "docker:scan": "docker scan ogimly/home-library:app && docker scan ogimly/home-library:db"
   },
   "dependencies": {

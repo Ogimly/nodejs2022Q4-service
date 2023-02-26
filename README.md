@@ -26,6 +26,20 @@ You can change default port (4000 as default) and db properties.
 
 ## Running application in Docker container
 
+For the first time run build
+
+```
+docker-compose up --build
+```
+
+or
+
+```
+npm run docker:build
+```
+
+further
+
 ```
 docker-compose up
 ```
