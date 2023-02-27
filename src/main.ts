@@ -34,11 +34,11 @@ const swaggerSetup = (port: number, app: INestApplication) => {
 const addListeners = (logger: AppLoggerService) => {
   process
     .on('unhandledRejection', async () => {
-      await logger.error('Unhandled Rejection...');
+      logger.crash('Unhandled Rejection... Server will be restarted');
       process.exit(1);
     })
     .on('uncaughtException', async () => {
-      await logger.error('Uncaught Exception...');
+      logger.crash('Uncaught Exception... Server will be restarted');
       process.exit(1);
     });
 };
@@ -61,10 +61,13 @@ async function bootstrap() {
 
   await app.listen(port);
 
-  // setTimeout(() => Promise.reject(new Error('unhandledRejection test')), 5000);
+  // setTimeout(
+  //   () => Promise.reject(new Error('unhandledRejection test')),
+  //   Math.random() * 10000
+  // );
   // setTimeout(() => {
   //   throw new Error('uncaughtException test');
-  // }, 10000);
+  // }, Math.random() * 10000);
 }
 
 bootstrap();

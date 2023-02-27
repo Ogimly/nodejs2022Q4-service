@@ -1,5 +1,6 @@
 import { Injectable, LoggerService } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { appendFileSync } from 'fs';
 import { appendFile, mkdir, readdir, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { LOG_DIR, ERROR_DIR } from '../../consts';
@@ -30,26 +31,32 @@ export class AppLoggerService implements LoggerService {
     this.maxFileSize = this.config.get<number>('logger.maxFileSize');
   }
 
-  public async log(message: string | MessageLog, ...optionalParams: any[]) {
-    if (this.level >= 0) {
-      await this.write(LogLevels.log, ConsoleColors.Green, message, optionalParams[0]);
-    }
-  }
-
   public async error(message: string | MessageLog, ...optionalParams: any[]) {
-    if (this.level >= 1) {
+    if (this.level >= 0) {
       await this.write(LogLevels.error, ConsoleColors.Red, message, optionalParams[1]);
     }
   }
 
-  public async warn(message: string, ...optionalParams: any[]) {
-    if (this.level >= 2) {
+  public async warn(message: string | MessageLog, ...optionalParams: any[]) {
+    if (this.level >= 1) {
       await this.write(LogLevels.warn, ConsoleColors.Yellow, message, optionalParams[0]);
     }
   }
 
-  public async debug(message: string, ...optionalParams: any[]) {
+  public async log(message: string | MessageLog, ...optionalParams: any[]) {
+    if (this.level >= 2) {
+      await this.write(LogLevels.log, ConsoleColors.Green, message, optionalParams[0]);
+    }
+  }
+
+  public async verbose(message: string | MessageLog, ...optionalParams: any[]) {
     if (this.level >= 3) {
+      await this.write(LogLevels.verbose, ConsoleColors.Cyan, message, optionalParams[0]);
+    }
+  }
+
+  public async debug(message: string | MessageLog, ...optionalParams: any[]) {
+    if (this.level >= 4) {
       await this.write(
         LogLevels.debug,
         ConsoleColors.Magenta,
@@ -59,49 +66,8 @@ export class AppLoggerService implements LoggerService {
     }
   }
 
-  public async verbose(message: string, ...optionalParams: any[]) {
-    if (this.level >= 4) {
-      await this.write(LogLevels.verbose, ConsoleColors.Cyan, message, optionalParams[0]);
-    }
-  }
-
-  private async write(
-    logLevelStr: string,
-    color: string,
-    message: string | MessageLog,
-    optional: string
-  ) {
-    const past = this.currentTime;
-    this.currentTime = new Date();
-
-    const pidStr = `[HLS] ${process.pid} -`;
-    const timeStr = this.currentTime.toLocaleString();
-    const { messageStr, deltaTime } = this.parseMessageStr(message);
-    const optionalStr = `[${optional}]`;
-    const deltaTimeStr = deltaTime
-      ? `+${deltaTime}ms`
-      : past
-      ? `+${this.currentTime.getTime() - past.getTime()}ms`
-      : '';
-
-    console.log(
-      `${color}${pidStr}`,
-      `${ConsoleColors.Reset}${timeStr}`,
-      `${color}${logLevelStr}`,
-      `${ConsoleColors.Reset}${optionalStr}`,
-      `${color}${messageStr}`,
-      `${ConsoleColors.Reset}${deltaTimeStr}`
-    );
-
-    if (this.isWriteToLogFile)
-      await this.writeToLogFile(
-        `${pidStr} ${timeStr} ${logLevelStr} ${optionalStr} ${messageStr} ${deltaTimeStr}\n`
-      );
-
-    if (logLevelStr === LogLevels.error && this.isWriteToErrorFile)
-      await this.writeToErrorFile(
-        `${pidStr} ${timeStr} ${logLevelStr} ${optionalStr} ${messageStr} ${deltaTimeStr}\n`
-      );
+  public crash(message: string, ...optionalParams: any[]) {
+    this.write(LogLevels.error, ConsoleColors.Red, message, optionalParams[0], true);
   }
 
   public async initLogs() {
@@ -143,6 +109,49 @@ export class AppLoggerService implements LoggerService {
           this.errorFileName = join(this.pathToErrorFile, lastFile.name);
         }
       }
+    }
+  }
+
+  private async write(
+    logLevelStr: string,
+    color: string,
+    message: string | MessageLog,
+    optional: string,
+    crash = false
+  ) {
+    const past = this.currentTime;
+    this.currentTime = new Date();
+
+    const pidStr = `[HLS] ${process.pid} -`;
+    const timeStr = this.currentTime.toLocaleString();
+    const { messageStr, deltaTime } = this.parseMessageStr(message);
+    const optionalStr = `[${optional}]`;
+    const deltaTimeStr = deltaTime
+      ? `+${deltaTime}ms`
+      : past
+      ? `+${this.currentTime.getTime() - past.getTime()}ms`
+      : '';
+
+    console.log(
+      `${color}${pidStr}`,
+      `${ConsoleColors.Reset}${timeStr}`,
+      `${color}${logLevelStr}`,
+      `${ConsoleColors.Reset}${optionalStr}`,
+      `${color}${messageStr}`,
+      `${ConsoleColors.Reset}${deltaTimeStr}`
+    );
+
+    const messageForFile = `${pidStr} ${timeStr} ${logLevelStr} ${optionalStr} ${messageStr} ${deltaTimeStr}\n`;
+
+    if (crash) {
+      // sync writing on crash app
+      if (this.isWriteToLogFile) appendFileSync(this.logFileName, messageForFile);
+      if (this.isWriteToErrorFile) appendFileSync(this.errorFileName, messageForFile);
+    } else {
+      // async writing
+      if (this.isWriteToLogFile) await this.writeToLogFile(messageForFile);
+      if (logLevelStr === LogLevels.error && this.isWriteToErrorFile)
+        await this.writeToErrorFile(messageForFile);
     }
   }
 

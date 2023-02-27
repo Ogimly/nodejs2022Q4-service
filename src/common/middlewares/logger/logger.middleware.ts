@@ -23,6 +23,8 @@ export class LoggerMiddleware implements NestMiddleware {
 
       if (statusCode < 400) {
         this.logger.log(message);
+      } else if (statusCode < 500) {
+        this.logger.warn(message);
       } else {
         this.logger.error(message);
       }
