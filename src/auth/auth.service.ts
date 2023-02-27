@@ -77,8 +77,7 @@ export class AuthService {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public verifyAccessToken(accessToken: string): any {
+  public verifyAccessToken(accessToken: string): Record<string, string> {
     try {
       return this.jwtService.verify(accessToken, {
         secret: this.config.get<string>('auth.jwtSecretKey'),
@@ -88,8 +87,7 @@ export class AuthService {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public verifyRefreshToken(refreshToken: string): any {
+  public verifyRefreshToken(refreshToken: string): Record<string, string> {
     try {
       return this.jwtService.verify(refreshToken, {
         secret: this.config.get<string>('auth.jwtSecretRefreshKey'),
