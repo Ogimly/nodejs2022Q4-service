@@ -1,6 +1,7 @@
-import { Controller, Post, Body, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiOkResponse,
@@ -10,6 +11,7 @@ import {
 } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public/public.decorator';
 import { AuthApiText } from '../common/enums';
+import { RefreshGuard } from '../common/guards/refresh/refresh.guard';
 import { ValidateTokenPipe } from '../common/pipes/validate-token/validate-token.pipe';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UserEntity } from '../users/entities/user.entity';
@@ -42,11 +44,13 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @UseGuards(RefreshGuard)
   @HttpCode(200)
   @ApiOperation({ summary: AuthApiText.refreshSum, description: AuthApiText.refreshDesc })
   @ApiOkResponse({ description: AuthApiText.Ok, type: Tokens })
   @ApiUnauthorizedResponse({ description: AuthApiText.BadRequest })
   @ApiForbiddenResponse({ description: AuthApiText.AccessDenied })
+  @ApiBearerAuth('refresh-token')
   refresh(@Body(ValidateTokenPipe) { refreshToken }: RefreshDto) {
     return this.authService.refresh(refreshToken);
   }

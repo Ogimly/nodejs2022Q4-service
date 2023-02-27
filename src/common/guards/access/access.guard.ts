@@ -5,7 +5,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { IS_PUBLIC_KEY } from '../../consts';
 import { DBMessages } from '../../enums';
@@ -14,9 +13,7 @@ import { DBMessages } from '../../enums';
 export class AccessGuard implements CanActivate {
   constructor(private readonly authService: AuthService, private reflector: Reflector) {}
 
-  canActivate(
-    context: ExecutionContext
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -37,6 +34,13 @@ export class AccessGuard implements CanActivate {
       throw new UnauthorizedException(DBMessages.AccessDenied);
 
     request.user = this.authService.verifyAccessToken(accessToken);
+
+    // const isValid = await this.authService.validAccessToken(
+    //   accessToken,
+    //   request.user.userId,
+    //   request.user.login
+    // );
+    // if (!isValid) throw new UnauthorizedException(DBMessages.AccessDenied);
 
     return true;
   }

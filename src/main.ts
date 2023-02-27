@@ -22,6 +22,10 @@ const swaggerSetup = (port: number, app: INestApplication) => {
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       'access-token'
     )
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'refresh-token'
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, document);
