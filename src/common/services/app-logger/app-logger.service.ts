@@ -180,17 +180,22 @@ export class AppLoggerService implements LoggerService {
   }
 
   private parseMessageStr(message: string | MessageLog) {
-    if (typeof message === 'string') return { messageStr: message, deltaTime: 0 };
+    if (typeof message === 'string') return { messageStr: message, deltaTime: '-' };
 
     if (message.message) {
       return {
         messageStr: `Status code: ${message.statusCode} ${message.message}`,
-        deltaTime: 0,
+        deltaTime: '-',
+      };
+    } else if (message.responseBody) {
+      return {
+        messageStr: `Body (response): ${message.responseBody}`,
+        deltaTime: '-',
       };
     } else {
       return {
-        messageStr: `${message.method} ${message.baseUrl}: Query params: ${message.query}, Body: ${message.body}, Status code: ${message.statusCode}`,
-        deltaTime: message.deltaTime,
+        messageStr: `${message.method} ${message.baseUrl}: Query params: ${message.query}, Body: ${message.requestBody}, Status code: ${message.statusCode}`,
+        deltaTime: `${message.deltaTime}`,
       };
     }
   }

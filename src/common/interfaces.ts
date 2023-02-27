@@ -9,11 +9,12 @@ export interface FavoritesResponse {
 }
 
 export interface MessageLog {
-  statusCode: number;
+  statusCode?: number;
   method?: string;
   baseUrl?: string;
   query?: string;
-  body?: string;
-  deltaTime?: number;
+  requestBody?: string;
+  responseBody?: string;
+  deltaTime?: string;
   message?: string;
 }

@@ -23,6 +23,7 @@ import loggerConfig from './common/config/logger-config';
 import authConfig from './common/config/auth-config';
 import { AccessGuard } from './common/guards/access/access.guard';
 import { HashService } from './common/services/hash/hash.service';
+import { LoggerInterceptor } from './common/interceptors/logger/logger.interceptor';
 
 @Module({
   imports: [
@@ -42,20 +43,24 @@ import { HashService } from './common/services/hash/hash.service';
   providers: [
     AppService,
     {
-      provide: APP_INTERCEPTOR,
-      useClass: ClassSerializerInterceptor,
-    },
-    {
-      provide: APP_PIPE,
-      useValue: new ValidationPipe(),
-    },
-    {
       provide: APP_FILTER,
       useClass: AppExceptionsFilter,
     },
     {
       provide: APP_GUARD,
       useClass: AccessGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggerInterceptor,
+    },
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe(),
     },
     HashService,
   ],

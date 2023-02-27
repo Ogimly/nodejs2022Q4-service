@@ -63,6 +63,8 @@ and type your access token (without `Bearer`!)
 Access token you can receive after login
 ![image](https://user-images.githubusercontent.com/101447709/221406750-563f84b7-ac37-4cc0-8f53-0309be74328e.png)
 
+For Refresh rout you can also type your refresh token for authorization
+
 ## Logging
 
 Logs are written to `logs` folder and additionally errors are written to `errors` folder, the structure of folders is as follows:
@@ -70,7 +72,7 @@ Logs are written to `logs` folder and additionally errors are written to `errors
 
 Logger parameters setting in `.env` file, for example:
 
-`LOG_LEVEL=5`, values: `0` - only `log` event, `1` + `error`, `2` + `warn`, `3` +`debug`, `4` and more - all log events
+`LOG_LEVEL=5`, values: `0` - only `error` event, `1` +`warn`, `2` +`log`, `3` +`verbose`, `4` and more - all log events
 
 `WRITE_LOG_FILE=1`, values: `1` - write logs to file, `0` - no
 

@@ -16,9 +16,9 @@ export class LoggerMiddleware implements NestMiddleware {
         method,
         baseUrl,
         query: JSON.stringify(query),
-        body: JSON.stringify(body),
+        requestBody: JSON.stringify(body),
         statusCode,
-        deltaTime: Date.now() - start,
+        deltaTime: `${Date.now() - start}`,
       };
 
       if (statusCode < 400) {
