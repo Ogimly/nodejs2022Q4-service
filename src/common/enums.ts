@@ -12,6 +12,7 @@ export const enum DBMessages {
   AccessDenied = 'Access denied',
   LoginPassInvalid = 'Login or password is invalid',
   RefreshTokenInvalid = 'Refresh token is invalid or expired',
+  NoRefreshToken = 'Body does not contain required fields',
 
   ArtistNotFound = 'Artist not found',
   ArtistAdded = 'Artist added successfully',

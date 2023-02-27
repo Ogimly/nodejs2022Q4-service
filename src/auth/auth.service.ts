@@ -95,7 +95,7 @@ export class AuthService {
         secret: this.config.get<string>('auth.jwtSecretRefreshKey'),
       });
     } catch {
-      throw new UnauthorizedException(DBMessages.RefreshTokenInvalid);
+      throw new ForbiddenException(DBMessages.RefreshTokenInvalid);
     }
   }
 

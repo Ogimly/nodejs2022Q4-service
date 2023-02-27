@@ -6,7 +6,7 @@ import { DBMessages } from '../../enums';
 export class ValidateTokenPipe implements PipeTransform<RefreshDto, RefreshDto> {
   transform({ refreshToken }: RefreshDto): RefreshDto {
     if (!refreshToken || typeof refreshToken !== 'string') {
-      throw new UnauthorizedException(DBMessages.RefreshTokenInvalid);
+      throw new UnauthorizedException(DBMessages.NoRefreshToken);
     }
 
     return { refreshToken };
