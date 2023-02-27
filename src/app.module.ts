@@ -66,7 +66,7 @@ import { LoggerInterceptor } from './common/interceptors/logger/logger.intercept
   ],
 })
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
+  configure(consumer: MiddlewareConsumer): void {
     consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

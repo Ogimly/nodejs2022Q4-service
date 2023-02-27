@@ -39,7 +39,7 @@ export class UsersController {
   @ApiOperation({ summary: UserApiText.getSum, description: UserApiText.getDesc })
   @ApiOkResponse({ description: UserApiText.Ok, type: [UserEntity] })
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
-  findAll() {
+  findAll(): Promise<UserEntity[]> {
     return this.usersService.findAll();
   }
 
@@ -48,7 +48,7 @@ export class UsersController {
   @ApiCreatedResponse({ description: UserApiText.createOk, type: UserEntity })
   @ApiBadRequestResponse({ description: UserApiText.createBadRequest })
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
     return this.usersService.create(createUserDto);
   }
 
@@ -59,7 +59,7 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })
   @ApiParam({ name: 'userId', type: String })
-  findOne(@Param('userId', ParseUUIDPipe, UserByIdPipe) user: UserEntity) {
+  findOne(@Param('userId', ParseUUIDPipe, UserByIdPipe) user: UserEntity): UserEntity {
     return user;
   }
 
@@ -74,7 +74,7 @@ export class UsersController {
   update(
     @Param('userId', ParseUUIDPipe, UserByIdPipe) user: UserEntity,
     @Body() updateUserDto: UpdateUserDto
-  ) {
+  ): Promise<UserEntity> {
     return this.usersService.update(user.id, updateUserDto);
   }
 
@@ -86,7 +86,7 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: UserApiText.Unauthorized })
   @ApiNotFoundResponse({ description: UserApiText.NotFound })
   @ApiParam({ name: 'userId', type: String })
-  remove(@Param('userId', ParseUUIDPipe, UserByIdPipe) user: UserEntity) {
+  remove(@Param('userId', ParseUUIDPipe, UserByIdPipe) user: UserEntity): Promise<void> {
     return this.usersService.remove(user.id);
   }
 }

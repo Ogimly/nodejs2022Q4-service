@@ -3,6 +3,7 @@ import { AlbumsPrismaRepository } from '../common/prisma/albums.prisma.repositor
 import { PrismaService } from '../common/prisma/prisma.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { AlbumEntity } from './entities/album.entity';
 
 @Injectable()
 export class AlbumsService {
@@ -12,27 +13,27 @@ export class AlbumsService {
     this.albums = new AlbumsPrismaRepository(prisma);
   }
 
-  create(createAlbumDto: CreateAlbumDto) {
+  create(createAlbumDto: CreateAlbumDto): Promise<AlbumEntity> {
     return this.albums.create(createAlbumDto);
   }
 
-  findAll() {
+  findAll(): Promise<AlbumEntity[]> {
     return this.albums.findAll();
   }
 
-  findOne(id: string) {
+  findOne(id: string): Promise<AlbumEntity> {
     return this.albums.findOne(id);
   }
 
-  update(id: string, updateAlbumDto: UpdateAlbumDto) {
+  update(id: string, updateAlbumDto: UpdateAlbumDto): Promise<AlbumEntity> {
     return this.albums.update(id, updateAlbumDto);
   }
 
-  remove(id: string) {
+  remove(id: string): Promise<void> {
     return this.albums.remove(id);
   }
 
-  validate(id: string) {
+  validate(id: string): Promise<boolean> {
     return this.albums.validate(id);
   }
 }

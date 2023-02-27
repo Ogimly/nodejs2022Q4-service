@@ -12,15 +12,15 @@ import { MessageLog } from '../../interfaces';
 export class LoggerInterceptor implements NestInterceptor {
   private readonly logger = new Logger(LoggerInterceptor.name);
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     return next.handle().pipe(
       map((body) => {
-        const message: MessageLog = {
-          responseBody: JSON.stringify(body),
-        };
-
-        this.logger.verbose(message);
-
+        if (body) {
+          const message: MessageLog = {
+            responseBody: JSON.stringify(body),
+          };
+          this.logger.verbose(message);
+        }
         return body;
       })
     );

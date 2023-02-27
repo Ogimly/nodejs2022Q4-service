@@ -1,7 +1,7 @@
 import { stat } from 'fs/promises';
 import { resolve, sep } from 'path';
 
-const checkPath = async (path: string, checkName: string) => {
+const checkPath = async (path: string, checkName: string): Promise<boolean> => {
   try {
     const statInfo = await stat(path);
 
@@ -13,7 +13,7 @@ const checkPath = async (path: string, checkName: string) => {
   }
 };
 
-export const isDirectory = async (path: string) => {
+export const isDirectory = async (path: string): Promise<boolean> => {
   if (!path) return false;
 
   const pathToDirectory = resolve(path + sep);
@@ -22,7 +22,7 @@ export const isDirectory = async (path: string) => {
   return pathIsDirectory;
 };
 
-export const isFile = async (path: string) => {
+export const isFile = async (path: string): Promise<boolean> => {
   if (!path) return false;
 
   const pathToFile = resolve(path);
@@ -31,7 +31,10 @@ export const isFile = async (path: string) => {
   return pathIsFile;
 };
 
-export const isFileSizeOK = async (path: string, maxFileSize: number) => {
+export const isFileSizeOK = async (
+  path: string,
+  maxFileSize: number
+): Promise<boolean> => {
   if (!path) return false;
   const pathToFile = resolve(path);
 

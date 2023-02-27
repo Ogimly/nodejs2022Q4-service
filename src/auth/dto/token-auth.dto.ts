@@ -7,7 +7,7 @@ export class Tokens {
   @ApiProperty({ description: 'Refresh token', format: 'string' })
   refreshToken: string;
 
-  constructor({ accessToken, refreshToken }) {
+  constructor(accessToken: string, refreshToken: string) {
     this.accessToken = accessToken;
     this.refreshToken = refreshToken;
   }

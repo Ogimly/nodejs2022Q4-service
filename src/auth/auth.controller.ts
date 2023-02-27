@@ -29,7 +29,7 @@ export class AuthController {
   @ApiOperation({ summary: AuthApiText.signupSum, description: AuthApiText.signupDesc })
   @ApiCreatedResponse({ description: AuthApiText.Ok, type: UserEntity })
   @ApiBadRequestResponse({ description: AuthApiText.BadRequest })
-  signup(@Body() createAuthDto: CreateUserDto) {
+  signup(@Body() createAuthDto: CreateUserDto): Promise<UserEntity> {
     return this.authService.signup(createAuthDto);
   }
 
@@ -39,7 +39,7 @@ export class AuthController {
   @ApiOkResponse({ description: AuthApiText.Ok, type: Tokens })
   @ApiBadRequestResponse({ description: AuthApiText.BadRequest })
   @ApiForbiddenResponse({ description: AuthApiText.LoginPassInvalid })
-  login(@Body() loginDto: CreateUserDto) {
+  login(@Body() loginDto: CreateUserDto): Promise<Tokens> {
     return this.authService.login(loginDto);
   }
 
@@ -51,7 +51,7 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: AuthApiText.BadRequest })
   @ApiForbiddenResponse({ description: AuthApiText.AccessDenied })
   @ApiBearerAuth('refresh-token')
-  refresh(@Body(ValidateTokenPipe) { refreshToken }: RefreshDto) {
+  refresh(@Body(ValidateTokenPipe) { refreshToken }: RefreshDto): Promise<Tokens> {
     return this.authService.refresh(refreshToken);
   }
 }

@@ -16,27 +16,27 @@ export class FavoritesService {
     return this.favorites.findAll();
   }
 
-  addArtist(ArtistId: string) {
+  addArtist(ArtistId: string): Promise<string> {
     return this.favorites.addEntity(ArtistId, DBEntities.Artist);
   }
 
-  addTrack(trackId: string) {
+  addTrack(trackId: string): Promise<string> {
     return this.favorites.addEntity(trackId, DBEntities.Track);
   }
 
-  addAlbum(albumId: string) {
+  addAlbum(albumId: string): Promise<string> {
     return this.favorites.addEntity(albumId, DBEntities.Album);
   }
 
-  removeArtist(ArtistId: string) {
+  removeArtist(ArtistId: string): Promise<void> {
     return this.favorites.removeEntity(ArtistId, DBEntities.Artist);
   }
 
-  removeTrack(trackId: string) {
+  removeTrack(trackId: string): Promise<void> {
     return this.favorites.removeEntity(trackId, DBEntities.Track);
   }
 
-  removeAlbum(albumId: string) {
+  removeAlbum(albumId: string): Promise<void> {
     return this.favorites.removeEntity(albumId, DBEntities.Album);
   }
 }

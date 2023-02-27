@@ -39,7 +39,7 @@ export class AlbumsController {
   @ApiOperation({ summary: AlbumApiText.getSum, description: AlbumApiText.getDesc })
   @ApiOkResponse({ description: AlbumApiText.Ok, type: [AlbumEntity] })
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
-  findAll() {
+  findAll(): Promise<AlbumEntity[]> {
     return this.albumsService.findAll();
   }
 
@@ -48,7 +48,9 @@ export class AlbumsController {
   @ApiCreatedResponse({ description: AlbumApiText.Ok, type: AlbumEntity })
   @ApiBadRequestResponse({ description: AlbumApiText.createBadRequest })
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
-  create(@Body(ValidateArtistIdPipe) createAlbumDto: CreateAlbumDto) {
+  create(
+    @Body(ValidateArtistIdPipe) createAlbumDto: CreateAlbumDto
+  ): Promise<AlbumEntity> {
     return this.albumsService.create(createAlbumDto);
   }
 
@@ -59,7 +61,7 @@ export class AlbumsController {
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
   @ApiNotFoundResponse({ description: AlbumApiText.NotFound })
   @ApiParam({ name: 'id', type: String })
-  findOne(@Param('id', ParseUUIDPipe, AlbumByIdPipe) album: AlbumEntity) {
+  findOne(@Param('id', ParseUUIDPipe, AlbumByIdPipe) album: AlbumEntity): AlbumEntity {
     return album;
   }
   @Put(':id')
@@ -72,7 +74,7 @@ export class AlbumsController {
   update(
     @Param('id', ParseUUIDPipe, AlbumByIdPipe) album: AlbumEntity,
     @Body(ValidateArtistIdPipe) updateAlbumDto: UpdateAlbumDto
-  ) {
+  ): Promise<AlbumEntity> {
     return this.albumsService.update(album.id, updateAlbumDto);
   }
 
@@ -84,7 +86,7 @@ export class AlbumsController {
   @ApiUnauthorizedResponse({ description: AlbumApiText.Unauthorized })
   @ApiNotFoundResponse({ description: AlbumApiText.NotFound })
   @ApiParam({ name: 'id', type: String })
-  remove(@Param('id', ParseUUIDPipe, AlbumByIdPipe) album: AlbumEntity) {
+  remove(@Param('id', ParseUUIDPipe, AlbumByIdPipe) album: AlbumEntity): Promise<void> {
     return this.albumsService.remove(album.id);
   }
 }

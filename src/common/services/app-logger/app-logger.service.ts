@@ -8,6 +8,11 @@ import { LogLevels, ConsoleColors } from '../../enums';
 import { isDirectory, isFileSizeOK } from '../../helpers/file-helpers';
 import { MessageLog } from '../../interfaces';
 
+type ParsedMessage = {
+  messageStr: string;
+  deltaTime: string;
+};
+
 @Injectable()
 export class AppLoggerService implements LoggerService {
   private level: number;
@@ -31,46 +36,44 @@ export class AppLoggerService implements LoggerService {
     this.maxFileSize = this.config.get<number>('logger.maxFileSize');
   }
 
-  public async error(message: string | MessageLog, ...optionalParams: any[]) {
+  public async error(message: string | MessageLog, ...optional: string[]): Promise<void> {
     if (this.level >= 0) {
-      await this.write(LogLevels.error, ConsoleColors.Red, message, optionalParams[1]);
+      await this.write(LogLevels.error, ConsoleColors.Red, message, optional[1]);
     }
   }
 
-  public async warn(message: string | MessageLog, ...optionalParams: any[]) {
+  public async warn(message: string | MessageLog, ...optional: string[]): Promise<void> {
     if (this.level >= 1) {
-      await this.write(LogLevels.warn, ConsoleColors.Yellow, message, optionalParams[0]);
+      await this.write(LogLevels.warn, ConsoleColors.Yellow, message, optional[0]);
     }
   }
 
-  public async log(message: string | MessageLog, ...optionalParams: any[]) {
+  public async log(message: string | MessageLog, ...optional: string[]): Promise<void> {
     if (this.level >= 2) {
-      await this.write(LogLevels.log, ConsoleColors.Green, message, optionalParams[0]);
+      await this.write(LogLevels.log, ConsoleColors.Green, message, optional[0]);
     }
   }
 
-  public async verbose(message: string | MessageLog, ...optionalParams: any[]) {
+  public async verbose(
+    message: string | MessageLog,
+    ...optional: string[]
+  ): Promise<void> {
     if (this.level >= 3) {
-      await this.write(LogLevels.verbose, ConsoleColors.Cyan, message, optionalParams[0]);
+      await this.write(LogLevels.verbose, ConsoleColors.Cyan, message, optional[0]);
     }
   }
 
-  public async debug(message: string | MessageLog, ...optionalParams: any[]) {
+  public async debug(message: string | MessageLog, ...optional: string[]): Promise<void> {
     if (this.level >= 4) {
-      await this.write(
-        LogLevels.debug,
-        ConsoleColors.Magenta,
-        message,
-        optionalParams[0]
-      );
+      await this.write(LogLevels.debug, ConsoleColors.Magenta, message, optional[0]);
     }
   }
 
-  public crash(message: string, ...optionalParams: any[]) {
-    this.write(LogLevels.error, ConsoleColors.Red, message, optionalParams[0], true);
+  public crash(message: string, ...optional: string[]): void {
+    this.write(LogLevels.error, ConsoleColors.Red, message, optional[0], true);
   }
 
-  public async initLogs() {
+  public async initLogs(): Promise<void> {
     if (this.isWriteToLogFile) {
       const isExist = await isDirectory(this.pathToLogFile);
 
@@ -118,7 +121,7 @@ export class AppLoggerService implements LoggerService {
     message: string | MessageLog,
     optional: string,
     crash = false
-  ) {
+  ): Promise<void> {
     const past = this.currentTime;
     this.currentTime = new Date();
 
@@ -126,11 +129,14 @@ export class AppLoggerService implements LoggerService {
     const timeStr = this.currentTime.toLocaleString();
     const { messageStr, deltaTime } = this.parseMessageStr(message);
     const optionalStr = `[${optional}]`;
-    const deltaTimeStr = deltaTime
-      ? `+${deltaTime}ms`
-      : past
-      ? `+${this.currentTime.getTime() - past.getTime()}ms`
-      : '';
+    const deltaTimeStr =
+      deltaTime === '-'
+        ? ''
+        : deltaTime
+        ? `+${deltaTime}ms`
+        : past
+        ? `+${this.currentTime.getTime() - past.getTime()}ms`
+        : '';
 
     console.log(
       `${color}${pidStr}`,
@@ -155,32 +161,32 @@ export class AppLoggerService implements LoggerService {
     }
   }
 
-  private async createLogFile() {
+  private async createLogFile(): Promise<void> {
     this.logFileName = join(this.pathToLogFile, `${LOG_DIR}-${Date.now()}.log`);
     await writeFile(this.logFileName, 'New log file started\n');
   }
 
-  private async createErrorFile() {
+  private async createErrorFile(): Promise<void> {
     this.errorFileName = join(this.pathToErrorFile, `${ERROR_DIR}-${Date.now()}.log`);
     await writeFile(this.errorFileName, 'New log errors file started\n');
   }
 
-  private async writeToLogFile(message: string) {
+  private async writeToLogFile(message: string): Promise<void> {
     const isOK = await isFileSizeOK(this.logFileName, this.maxFileSize);
     if (!isOK) await this.createLogFile();
 
     await appendFile(this.logFileName, message);
   }
 
-  private async writeToErrorFile(message: string) {
+  private async writeToErrorFile(message: string): Promise<void> {
     const isOK = await isFileSizeOK(this.errorFileName, this.maxFileSize);
     if (!isOK) await this.createErrorFile();
 
     await appendFile(this.errorFileName, message);
   }
 
-  private parseMessageStr(message: string | MessageLog) {
-    if (typeof message === 'string') return { messageStr: message, deltaTime: '-' };
+  private parseMessageStr(message: string | MessageLog): ParsedMessage {
+    if (typeof message === 'string') return { messageStr: message, deltaTime: '' };
 
     if (message.message) {
       return {

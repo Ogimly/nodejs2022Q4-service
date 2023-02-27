@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 import { AppLoggerService } from './common/services/app-logger/app-logger.service';
 import { ConfigService } from '@nestjs/config';
 
-const swaggerSetup = (port: number, app: INestApplication) => {
+const swaggerSetup = (port: number, app: INestApplication): void => {
   const config = new DocumentBuilder()
     .setTitle('Home Library Service')
     .setDescription('Home music library service API description')
@@ -31,7 +31,7 @@ const swaggerSetup = (port: number, app: INestApplication) => {
   SwaggerModule.setup('doc', app, document);
 };
 
-const addListeners = (logger: AppLoggerService) => {
+const addListeners = (logger: AppLoggerService): void => {
   process
     .on('unhandledRejection', async () => {
       logger.crash('Unhandled Rejection... Server will be restarted');
@@ -43,7 +43,7 @@ const addListeners = (logger: AppLoggerService) => {
     });
 };
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
 

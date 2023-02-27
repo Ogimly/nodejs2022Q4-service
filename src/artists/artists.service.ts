@@ -3,6 +3,7 @@ import { ArtistsPrismaRepository } from '../common/prisma/artisrs.prisma.reposit
 import { PrismaService } from '../common/prisma/prisma.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { ArtistEntity } from './entities/artist.entity';
 
 @Injectable()
 export class ArtistsService {
@@ -12,27 +13,27 @@ export class ArtistsService {
     this.artists = new ArtistsPrismaRepository(prisma);
   }
 
-  create(createArtistDto: CreateArtistDto) {
+  create(createArtistDto: CreateArtistDto): Promise<ArtistEntity> {
     return this.artists.create(createArtistDto);
   }
 
-  findAll() {
+  findAll(): Promise<ArtistEntity[]> {
     return this.artists.findAll();
   }
 
-  findOne(id: string) {
+  findOne(id: string): Promise<ArtistEntity> {
     return this.artists.findOne(id);
   }
 
-  update(id: string, updateArtistDto: UpdateArtistDto) {
+  update(id: string, updateArtistDto: UpdateArtistDto): Promise<ArtistEntity> {
     return this.artists.update(id, updateArtistDto);
   }
 
-  remove(id: string) {
+  remove(id: string): Promise<void> {
     return this.artists.remove(id);
   }
 
-  validate(id: string) {
+  validate(id: string): Promise<boolean> {
     return this.artists.validate(id);
   }
 }

@@ -40,7 +40,7 @@ export class TracksController {
   @ApiOperation({ summary: TrackApiText.getSum, description: TrackApiText.getDesc })
   @ApiOkResponse({ description: TrackApiText.Ok, type: [TrackEntity] })
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
-  findAll() {
+  findAll(): Promise<TrackEntity[]> {
     return this.tracksService.findAll();
   }
 
@@ -51,7 +51,7 @@ export class TracksController {
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
   create(
     @Body(ValidateArtistIdPipe, ValidateAlbumIdPipe) createTrackDto: CreateTrackDto
-  ) {
+  ): Promise<TrackEntity> {
     return this.tracksService.create(createTrackDto);
   }
 
@@ -62,7 +62,7 @@ export class TracksController {
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
   @ApiNotFoundResponse({ description: TrackApiText.NotFound })
   @ApiParam({ name: 'id', type: String })
-  findOne(@Param('id', ParseUUIDPipe, TrackByIdPipe) track: TrackEntity) {
+  findOne(@Param('id', ParseUUIDPipe, TrackByIdPipe) track: TrackEntity): TrackEntity {
     return track;
   }
 
@@ -76,7 +76,7 @@ export class TracksController {
   update(
     @Param('id', ParseUUIDPipe, TrackByIdPipe) track: TrackEntity,
     @Body(ValidateArtistIdPipe, ValidateAlbumIdPipe) updateTrackDto: UpdateTrackDto
-  ) {
+  ): Promise<TrackEntity> {
     return this.tracksService.update(track.id, updateTrackDto);
   }
 
@@ -88,7 +88,7 @@ export class TracksController {
   @ApiUnauthorizedResponse({ description: TrackApiText.Unauthorized })
   @ApiNotFoundResponse({ description: TrackApiText.NotFound })
   @ApiParam({ name: 'id', type: String })
-  remove(@Param('id', ParseUUIDPipe, TrackByIdPipe) track: TrackEntity) {
+  remove(@Param('id', ParseUUIDPipe, TrackByIdPipe) track: TrackEntity): Promise<void> {
     return this.tracksService.remove(track.id);
   }
 }

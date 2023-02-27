@@ -4,6 +4,7 @@ import { UsersPrismaRepository } from '../common/prisma/users.prisma.repository'
 import { HashService } from '../common/services/hash/hash.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -13,23 +14,23 @@ export class UsersService {
     this.users = new UsersPrismaRepository(prisma, hashService);
   }
 
-  create(createUserDto: CreateUserDto) {
+  create(createUserDto: CreateUserDto): Promise<UserEntity> {
     return this.users.create(createUserDto);
   }
 
-  findAll() {
+  findAll(): Promise<UserEntity[]> {
     return this.users.findAll();
   }
 
-  findOne(id: string) {
+  findOne(id: string): Promise<UserEntity> {
     return this.users.findOne(id);
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
+  update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     return this.users.update(id, updateUserDto);
   }
 
-  remove(id: string) {
+  remove(id: string): Promise<void> {
     return this.users.remove(id);
   }
 }

@@ -6,7 +6,7 @@ import { MessageLog } from '../../interfaces';
 export class LoggerMiddleware implements NestMiddleware {
   private logger = new Logger(LoggerMiddleware.name);
 
-  use(req: Request, res: Response, next: NextFunction) {
+  use(req: Request, res: Response, next: NextFunction): void {
     const { baseUrl, method, query, body } = req;
     const start = Date.now();
 

@@ -12,7 +12,7 @@ import { MessageLog } from '../../interfaces';
 export class AppExceptionsFilter implements ExceptionFilter {
   private logger = new Logger(AppExceptionsFilter.name);
 
-  catch(exception: unknown, host: ArgumentsHost) {
+  catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     let statusCode: number;
     let message: string;

@@ -20,6 +20,7 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { FavApiText } from '../common/enums';
+import { FavoritesResponse } from '../common/interfaces';
 import { FavoriteEntity } from './entities/favorite.entity';
 import { FavoritesService } from './favorites.service';
 
@@ -33,7 +34,7 @@ export class FavoritesController {
   @ApiOperation({ summary: FavApiText.getSum, description: FavApiText.getDesc })
   @ApiOkResponse({ description: FavApiText.Ok, type: [FavoriteEntity] })
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
-  findAll() {
+  findAll(): Promise<FavoritesResponse> {
     return this.favoritesService.findAll();
   }
 
@@ -43,7 +44,7 @@ export class FavoritesController {
   @ApiBadRequestResponse({ description: FavApiText.artBadRequest })
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiUnprocessableEntityResponse({ description: FavApiText.artUnpr })
-  addArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+  addArtist(@Param('id', new ParseUUIDPipe()) id: string): Promise<string> {
     return this.favoritesService.addArtist(id);
   }
 
@@ -53,7 +54,7 @@ export class FavoritesController {
   @ApiBadRequestResponse({ description: FavApiText.trBadRequest })
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiUnprocessableEntityResponse({ description: FavApiText.trUnpr })
-  addTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+  addTrack(@Param('id', new ParseUUIDPipe()) id: string): Promise<string> {
     return this.favoritesService.addTrack(id);
   }
 
@@ -63,7 +64,7 @@ export class FavoritesController {
   @ApiBadRequestResponse({ description: FavApiText.albBadRequest })
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiUnprocessableEntityResponse({ description: FavApiText.albUnpr })
-  addAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+  addAlbum(@Param('id', new ParseUUIDPipe()) id: string): Promise<string> {
     return this.favoritesService.addAlbum(id);
   }
 
@@ -74,7 +75,7 @@ export class FavoritesController {
   @ApiBadRequestResponse({ description: FavApiText.artBadRequest })
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiNotFoundResponse({ description: FavApiText.artNotFound })
-  removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+  removeArtist(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     return this.favoritesService.removeArtist(id);
   }
 
@@ -85,7 +86,7 @@ export class FavoritesController {
   @ApiBadRequestResponse({ description: FavApiText.trBadRequest })
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiNotFoundResponse({ description: FavApiText.trNotFound })
-  removeTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+  removeTrack(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     return this.favoritesService.removeTrack(id);
   }
 
@@ -96,7 +97,7 @@ export class FavoritesController {
   @ApiBadRequestResponse({ description: FavApiText.albBadRequest })
   @ApiUnauthorizedResponse({ description: FavApiText.Unauthorized })
   @ApiNotFoundResponse({ description: FavApiText.albNotFound })
-  removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+  removeAlbum(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     return this.favoritesService.removeAlbum(id);
   }
 }

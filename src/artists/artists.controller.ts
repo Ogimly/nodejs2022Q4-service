@@ -38,7 +38,7 @@ export class ArtistsController {
   @ApiOperation({ summary: ArtistApiText.getSum, description: ArtistApiText.getDesc })
   @ApiOkResponse({ description: ArtistApiText.Ok, type: [ArtistEntity] })
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
-  findAll() {
+  findAll(): Promise<ArtistEntity[]> {
     return this.artistsService.findAll();
   }
 
@@ -50,7 +50,7 @@ export class ArtistsController {
   @ApiCreatedResponse({ description: ArtistApiText.Ok, type: ArtistEntity })
   @ApiBadRequestResponse({ description: ArtistApiText.createBadRequest })
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
-  create(@Body() createArtistDto: CreateArtistDto) {
+  create(@Body() createArtistDto: CreateArtistDto): Promise<ArtistEntity> {
     return this.artistsService.create(createArtistDto);
   }
 
@@ -61,7 +61,9 @@ export class ArtistsController {
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
   @ApiNotFoundResponse({ description: ArtistApiText.NotFound })
   @ApiParam({ name: 'id', type: String })
-  findOne(@Param('id', ParseUUIDPipe, ArtistByIdPipe) artist: ArtistEntity) {
+  findOne(
+    @Param('id', ParseUUIDPipe, ArtistByIdPipe) artist: ArtistEntity
+  ): ArtistEntity {
     return artist;
   }
 
@@ -75,7 +77,7 @@ export class ArtistsController {
   update(
     @Param('id', ParseUUIDPipe, ArtistByIdPipe) artist: ArtistEntity,
     @Body() updateArtistDto: UpdateArtistDto
-  ) {
+  ): Promise<ArtistEntity> {
     return this.artistsService.update(artist.id, updateArtistDto);
   }
 
@@ -87,7 +89,9 @@ export class ArtistsController {
   @ApiUnauthorizedResponse({ description: ArtistApiText.Unauthorized })
   @ApiNotFoundResponse({ description: ArtistApiText.NotFound })
   @ApiParam({ name: 'id', type: String })
-  remove(@Param('id', ParseUUIDPipe, ArtistByIdPipe) artist: ArtistEntity) {
+  remove(
+    @Param('id', ParseUUIDPipe, ArtistByIdPipe) artist: ArtistEntity
+  ): Promise<void> {
     return this.artistsService.remove(artist.id);
   }
 }
